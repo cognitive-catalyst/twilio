@@ -3,8 +3,6 @@ import json
 import pymysql.cursors
 from flask import Blueprint, request
 
-from Data import Concepts, Entities, Keywords
-
 blueprint = Blueprint("api", __name__)
 
 keywords = Keywords()

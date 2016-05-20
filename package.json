@@ -15,7 +15,6 @@
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-router": "^2.0.0",
-    "react-slider": "^0.5.1"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",
@@ -28,12 +27,6 @@
     "babel-preset-stage-0": "^6.5.0",
     "chunk-manifest-webpack-plugin": "0.0.1",
     "css-loader": "^0.18.0",
-    "eslint": "^2.10.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-import-resolver-webpack": "^0.2.4",
-    "eslint-plugin-import": "^1.8.0",
-    "eslint-plugin-jsx-a11y": "^1.2.0",
-    "eslint-plugin-react": "^5.1.1",
     "interpret": "^1.0.1",
     "node-sass": "^3.2.0",
     "react-hot-loader": "^1.2.8",
