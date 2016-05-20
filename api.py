@@ -117,6 +117,7 @@ def message():
         (message_id, text, type, relevance, sentiment)
         VALUES(LAST_INSERT_ID(), %s, %s, %s, %s)'''
         cursor.executemany(sql, parameters)
+
     connection.commit()
 
     return json.dumps({'status': 'success'})

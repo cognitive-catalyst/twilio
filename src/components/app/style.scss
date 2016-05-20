@@ -10,3 +10,31 @@
         margin-bottom:30px;
     }
 }
+
+.banner{
+    width: 200px;
+    position: absolute;
+    top: 60px;
+    right: -60px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 1rem;
+    line-height: 2rem;
+    transition: 0.5s;
+
+    &:hover{
+        background: #c11;
+        color: #fff;
+    }
+}

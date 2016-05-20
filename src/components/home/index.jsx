@@ -15,7 +15,7 @@ export default () => (
                 <h3 className='message-type-option completed'>COMPLETED</h3>
             </div>
             <Messages />
-            <img src={Pagination} />
+            <img src={Pagination} className='pagination'/>
         </div>
     </div>
 )

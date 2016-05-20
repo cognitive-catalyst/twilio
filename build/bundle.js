@@ -32546,7 +32546,7 @@
 
 	exports.default = function (_ref) {
 	    var children = _ref.children;
-	    return _react2.default.createElement('div', { className: 'app' }, _react2.default.createElement('img', { src: _navHeader2.default, className: 'header' }), children);
+	    return _react2.default.createElement('div', { className: 'app' }, _react2.default.createElement('a', { className: 'banner', href: 'http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/question-answer.html', target: '_blank' }, 'Watson Demo'), _react2.default.createElement('img', { src: _navHeader2.default, className: 'header' }), children);
 	};
 
 /***/ },
@@ -32590,7 +32590,7 @@
 
 
 	// module
-	exports.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  max-width: 1200px;\n  padding: 0px 30px; }\n  .app .header {\n    width: 100%;\n    margin-bottom: 30px; }\n", ""]);
+	exports.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  max-width: 1200px;\n  padding: 0px 30px; }\n  .app .header {\n    width: 100%;\n    margin-bottom: 30px; }\n\n.banner {\n  width: 200px;\n  position: absolute;\n  top: 60px;\n  right: -60px;\n  transform: rotate(45deg);\n  -webkit-transform: rotate(45deg);\n  -ms-transform: rotate(45deg);\n  -moz-transform: rotate(45deg);\n  -o-transform: rotate(45deg);\n  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);\n  background: #000;\n  color: #fff;\n  text-decoration: none;\n  font-family: arial, sans-serif;\n  text-align: center;\n  font-weight: bold;\n  padding: 5px 40px;\n  font-size: 1rem;\n  line-height: 2rem;\n  transition: 0.5s; }\n  .banner:hover {\n    background: #c11;\n    color: #fff; }\n", ""]);
 
 	// exports
 
@@ -32913,7 +32913,7 @@
 	}
 
 	exports.default = function () {
-	    return _react2.default.createElement('div', { className: 'home' }, _react2.default.createElement('img', { src: _chart2.default, className: 'chart' }), _react2.default.createElement('div', { className: 'right-col' }, _react2.default.createElement('div', { className: 'message-type' }, _react2.default.createElement('h3', { className: 'message-type-option incoming' }, 'INCOMING'), _react2.default.createElement('h3', { className: 'message-type-option completed' }, 'COMPLETED')), _react2.default.createElement(_messages2.default, null), _react2.default.createElement('img', { src: _pagination2.default })));
+	    return _react2.default.createElement('div', { className: 'home' }, _react2.default.createElement('img', { src: _chart2.default, className: 'chart' }), _react2.default.createElement('div', { className: 'right-col' }, _react2.default.createElement('div', { className: 'message-type' }, _react2.default.createElement('h3', { className: 'message-type-option incoming' }, 'INCOMING'), _react2.default.createElement('h3', { className: 'message-type-option completed' }, 'COMPLETED')), _react2.default.createElement(_messages2.default, null), _react2.default.createElement('img', { src: _pagination2.default, className: 'pagination' })));
 	};
 
 /***/ },
@@ -33032,9 +33032,21 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
 
 	var _react = __webpack_require__(300);
 
@@ -33060,6 +33072,24 @@
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
 
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
+	}
+
+	function _possibleConstructorReturn(self, call) {
+	    if (!self) {
+	        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== "function" && superClass !== null) {
+	        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
 	exports.default = function (_ref) {
 	    var text = _ref.text;
 	    var phoneNumber = _ref.phoneNumber;
@@ -33077,8 +33107,48 @@
 	        state: state,
 	        day: day,
 	        time: time
-	    }), _react2.default.createElement('h3', { className: 'message-body' }, text)), _react2.default.createElement('div', { className: 'message-right' }, _react2.default.createElement(_messageInfo.Sentiment, { sentiment: sentiment }), _react2.default.createElement(_messageInfo.Keywords, { keywords: keywords }), _react2.default.createElement(_messageInfo.Entities, { entities: entities }), _react2.default.createElement(_messageInfo.Concepts, { concepts: concepts })), _react2.default.createElement('img', { src: _check2.default }));
+	    }), _react2.default.createElement(MessageBody, { text: text, keywords: keywords })), _react2.default.createElement('div', { className: 'message-right' }, _react2.default.createElement(_messageInfo.Sentiment, { sentiment: sentiment }), _react2.default.createElement(_messageInfo.Route, { keywords: keywords }), _react2.default.createElement(_messageInfo.Entities, { entities: entities }), _react2.default.createElement(_messageInfo.Concepts, { concepts: concepts })), _react2.default.createElement('img', { src: _check2.default, className: 'check' }));
 	};
+
+	var MessageBody = function (_React$Component) {
+	    _inherits(MessageBody, _React$Component);
+
+	    function MessageBody() {
+	        _classCallCheck(this, MessageBody);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MessageBody).apply(this, arguments));
+	    }
+
+	    _createClass(MessageBody, [{
+	        key: 'render',
+	        value: function render() {
+	            var text = this.props.text;
+
+	            if (this.props.keywords != {}) {
+	                var topRel = 0;
+	                var topKeyword = '';
+	                for (var k in this.props.keywords) {
+
+	                    if (this.props.keywords[k].relevance > topRel) {
+	                        topRel = this.props.keywords[k].relevance;
+	                        topKeyword = k;
+	                    }
+	                }
+	                for (var _k in this.props.keywords) {
+	                    if (_k == topKeyword) {
+	                        text = text.replace(_k, "<span class='keyword bold'>" + _k + "</span>");
+	                    } else {
+	                        text = text.replace(_k, "<span class='keyword'>" + _k + "</span>");
+	                    }
+	                }
+	            }
+
+	            return _react2.default.createElement('h3', { className: 'message-body', dangerouslySetInnerHTML: { __html: text } });
+	        }
+	    }]);
+
+	    return MessageBody;
+	}(_react2.default.Component);
 
 /***/ },
 /* 523 */
@@ -33142,7 +33212,7 @@
 
 
 	// module
-	exports.push([module.id, ".message {\n  border-width: 1px 0 0 0;\n  border-style: solid;\n  border-color: #AFAEAF;\n  display: flex;\n  justify-content: space-between;\n  padding: 20px 0; }\n  .message:last-child {\n    border-bottom-width: 1px; }\n  .message .message-header {\n    display: flex;\n    margin-bottom: 10px; }\n    .message .message-header .info {\n      margin-right: 15px;\n      color: #AFAEAF; }\n    .message .message-header .phone-number {\n      color: #00B39F; }\n    .message .message-header .location {\n      text-transform: capitalize; }\n  .message .message-left {\n    flex: 2; }\n  .message .message-right {\n    flex: 1;\n    display: flex;\n    flex-direction: column; }\n  .message .message-info {\n    display: flex;\n    flex-direction: row; }\n    .message .message-info .key {\n      width: 50px;\n      color: #AFAEAF;\n      margin-right: 5px;\n      display: flex;\n      justify-content: flex-end; }\n    .message .message-info.sentiment .value {\n      text-transform: capitalize; }\n    .message .message-info.negative .value {\n      font-weight: 600;\n      color: #734199; }\n", ""]);
+	exports.push([module.id, ".message {\n  border-width: 1px 0 0 0;\n  border-style: solid;\n  border-color: #AFAEAF;\n  display: flex;\n  justify-content: space-between;\n  padding: 20px 0; }\n  .message .check {\n    cursor: pointer; }\n    .message .check:hover {\n      opacity: 0.5; }\n  .message:last-child {\n    border-bottom-width: 1px; }\n  .message .message-header {\n    display: flex;\n    margin-bottom: 10px; }\n    .message .message-header .info {\n      margin-right: 15px; }\n    .message .message-header .phone-number {\n      color: #00B39F; }\n    .message .message-header .location {\n      text-transform: capitalize; }\n  .message .message-left {\n    flex: 2;\n    margin-right: 40px; }\n    .message .message-left .keyword {\n      background-color: rgba(0, 179, 159, 0.3); }\n      .message .message-left .keyword.bold {\n        font-weight: bold; }\n  .message .message-right {\n    flex: 1;\n    display: flex;\n    flex-direction: column; }\n  .message .message-info {\n    display: flex;\n    flex-direction: row; }\n    .message .message-info .key {\n      width: 50px;\n      color: #AFAEAF;\n      margin-right: 5px;\n      display: flex;\n      justify-content: flex-end; }\n    .message .message-info.sentiment .value {\n      text-transform: capitalize; }\n    .message .message-info.negative .value {\n      font-weight: 600;\n      color: #734199; }\n", ""]);
 
 	// exports
 
@@ -33165,18 +33235,39 @@
 	    var sentiment = _ref.sentiment;
 
 	    // if (sentiment >=
-	    return _react2.default.createElement('div', { className: 'sentiment message-info ' + sentiment }, _react2.default.createElement('h4', { className: 'key' }, 'Sentiment: '), _react2.default.createElement('h4', { className: 'value ' }, sentiment));
+	    return _react2.default.createElement('div', { className: 'sentiment message-info ' + sentiment }, _react2.default.createElement('h4', { className: 'key' }, 'Sentiment: '), _react2.default.createElement('h4', { className: 'value' }, sentiment));
 	};
 
-	var Keywords = function Keywords(_ref2) {
+	var Route = function Route(_ref2) {
 	    var keywords = _ref2.keywords;
 
-	    var valString = '';
-	    if (keywords != {}) {
-	        valString = Object.keys(keywords).join(', ');
-	    }
+	    var luggage = ['bag', 'bags', 'baggage', 'luggage'];
+	    var customer_service = ['flight crew', 'flight attendant', 'stewardess', 'customer service', 'stewardesses', 'flight attendants'];
+	    var weather_delay = ['weather delay', 'weather', 'weather delays'];
 
-	    return _react2.default.createElement('div', { className: 'keywords message-info', style: valString == '' ? { display: 'none' } : {} }, _react2.default.createElement('h4', { className: 'key' }, 'Keywords: '), _react2.default.createElement('h4', { className: 'value' }, valString));
+	    var valString = '';
+	    var topRel = 0;
+	    if (keywords != {}) {
+	        for (var k in keywords) {
+	            var relevance = keywords[k]['relevance'];
+	            if (luggage.indexOf(k.toLowerCase()) != -1 && relevance > topRel) {
+	                valString = 'Luggage';
+	                topRel = relevance;
+	            } else if (customer_service.indexOf(k.toLowerCase()) != -1 && relevance > topRel) {
+	                console.log('here service');
+
+	                valString = 'Customer Service';
+	                topRel = relevance;
+	            } else if (weather_delay.indexOf(k.toLowerCase()) != -1 && relevance > topRel) {
+	                console.log('here');
+	                valString = 'Weather Delay';
+	                topRel = relevance;
+	            }
+
+	            // console.log(topRel + valString)
+	        }
+	    }
+	    return _react2.default.createElement('div', { className: 'route message-info', style: valString == '' ? { display: 'none' } : {} }, _react2.default.createElement('h4', { className: 'key' }, 'Route: '), _react2.default.createElement('h4', { className: 'value' }, valString));
 	};
 
 	var Entities = function Entities(_ref3) {
@@ -33203,7 +33294,7 @@
 
 	module.exports = {
 	    Sentiment: Sentiment,
-	    Keywords: Keywords,
+	    Route: Route,
 	    Entities: Entities,
 	    Concepts: Concepts
 	};
@@ -34439,7 +34530,7 @@
 
 
 	// module
-	exports.push([module.id, ".home {\n  display: flex;\n  flex-direction: row; }\n  .home .chart {\n    margin-right: 30px;\n    align-self: flex-start; }\n  .home .right-col {\n    width: 100%; }\n  .home .message-type {\n    display: flex;\n    width: 100px;\n    margin-bottom: 30px; }\n    .home .message-type .message-type-option {\n      cursor: pointer;\n      margin-right: 30px;\n      font-weight: 800; }\n    .home .message-type .completed {\n      color: #00B39F; }\n", ""]);
+	exports.push([module.id, ".home {\n  display: flex;\n  flex-direction: row; }\n  .home .chart {\n    margin-right: 30px;\n    align-self: flex-start; }\n  .home .right-col {\n    width: 100%; }\n  .home .pagination {\n    margin-top: 25px; }\n  .home .message-type {\n    display: flex;\n    width: 100px;\n    margin-bottom: 30px; }\n    .home .message-type .message-type-option {\n      cursor: pointer;\n      margin-right: 30px;\n      font-weight: 800; }\n      .home .message-type .message-type-option:hover {\n        opacity: 0.5; }\n    .home .message-type .completed {\n      color: #00B39F; }\n", ""]);
 
 	// exports
 

@@ -5,21 +5,42 @@ const Sentiment = ({sentiment}) => {
     return (
         <div className={'sentiment message-info ' + sentiment}>
             <h4 className='key'>Sentiment: </h4>
-            <h4 className='value '>{sentiment}</h4>
+            <h4 className='value'>{sentiment}</h4>
         </div>
     )
 }
 
-const Keywords = ({keywords}) => {
+const Route = ({keywords}) => {
+
+    const luggage = ['bag', 'bags','baggage', 'luggage']
+    const customer_service = ['flight crew', 'flight attendant', 'stewardess', 'customer service', 'stewardesses', 'flight attendants',]
+    const weather_delay = ['weather delay', 'weather', 'weather delays']
 
     let valString = '';
+    let topRel = 0
     if (keywords != {} ){
-        valString = Object.keys(keywords).join(', ')
-    }
+        for (let k in keywords){
+            let relevance = keywords[k]['relevance']
+            if (luggage.indexOf(k.toLowerCase()) != -1 &&  relevance > topRel){
+                valString = 'Luggage'
+                topRel = relevance
+            } else if (customer_service.indexOf(k.toLowerCase()) != -1 &&  relevance > topRel){
+                console.log('here service')
 
+                valString ='Customer Service'
+                topRel = relevance
+            } else if (weather_delay.indexOf(k.toLowerCase()) != -1 &&  relevance > topRel){
+                console.log('here')
+                valString ='Weather Delay'
+                topRel = relevance
+            }
+
+            // console.log(topRel + valString)
+        }
+    }
     return (
-        <div className='keywords message-info' style={valString=='' ? {display:'none'}:{}}>
-            <h4 className='key'>Keywords: </h4>
+        <div className='route message-info' style={valString=='' ? {display:'none'}:{}}>
+            <h4 className='key'>Route: </h4>
             <h4 className='value'>{valString}</h4>
         </div>
     )
@@ -55,7 +76,7 @@ const Concepts = ({concepts}) => {
 
 module.exports = {
     Sentiment,
-    Keywords,
+    Route,
     Entities,
     Concepts
 }

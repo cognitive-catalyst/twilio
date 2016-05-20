@@ -6,6 +6,14 @@
     justify-content:space-between;
     padding:20px 0;
 
+    .check{
+        cursor:pointer;
+        &:hover{
+            opacity:0.5;
+        }
+
+    }
+
     &:last-child{
         border-bottom-width:1px;
 
@@ -17,7 +25,6 @@
 
         .info{
             margin-right:15px;
-            color:#AFAEAF;
         }
 
         .phone-number{
@@ -30,7 +37,17 @@
     }
     .message-left{
         flex:2;
+        margin-right:40px;
+
+        .keyword{
+            background-color:rgba(#00B39F, 0.3);
+
+            &.bold{
+                font-weight:bold;
+            }
+        }
     }
+
     .message-right{
         flex:1;
         display:flex;
@@ -53,8 +70,6 @@
         &.negative .value{
             font-weight:600;
             color:#734199;
-        }
-        .value{
         }
     }
 }
