@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="140px" height="260px" viewBox="0 0 140 260" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.1 (29687) - http://www.bohemiancoding.com/sketch -->
+    <title>24 hours</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="dash-copy-2" transform="translate(-42.000000, -126.000000)">
+            <g id="User-Information" transform="translate(0.000000, 100.000000)">
+                <g id="24-hours" transform="translate(42.000000, 26.000000)">
+                    <rect id="Base-Copy-2" fill="#ECECEC" x="0" y="0" width="140" height="260"></rect>
+                    <g id="Text" transform="translate(19.000000, 15.000000)">
+                        <text id="387" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="16" font-weight="300" line-spacing="15" fill="#131313">
+                            <tspan x="38.5" y="190">387</tspan>
+                        </text>
+                        <text id="total" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="10" font-weight="300" line-spacing="15" fill="#787678">
+                            <tspan x="42.74" y="203">total</tspan>
+                        </text>
+                        <text id="24-HOURS" font-family="HelveticaNeue-Bold, Helvetica Neue" font-size="12" font-weight="bold" fill="#787678">
+                            <tspan x="21.374" y="38">24 HOURS</tspan>
+                        </text>
+                        <text id="Sentiment-Score" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="14" font-weight="300" line-spacing="15" fill="#787678">
+                            <tspan x="0" y="14">Sentiment Score</tspan>
+                        </text>
+                        <path d="M97.3968873,29.152495 C98.3335783,28.215804 99.0929164,28.5240655 99.0929164,29.851589 L99.0929164,33.912029 C99.0929164,35.2348189 98.0253168,36.3071521 96.6977932,36.3071521 L92.6373533,36.3071521 C91.3145633,36.3071521 90.9968347,35.5525476 91.9382593,34.611123 L97.3968873,29.152495 Z" id="Rectangle-39" fill="#C7C7C6" transform="translate(95.244593, 32.459201) rotate(-315.000000) translate(-95.244593, -32.459201) "></path>
+                    </g>
+                    <g id="Chart" transform="translate(24.000000, 65.000000)">
+                        <path d="M45.4609375,102.077475 C70.3137525,102.077475 90.4609375,81.9302903 90.4609375,57.0774753 C90.4609375,32.2246604 70.3137525,12.0774753 45.4609375,12.0774753 C20.6081225,12.0774753 0.4609375,32.2246604 0.4609375,57.0774753 C0.4609375,81.9302903 20.6081225,102.077475 45.4609375,102.077475 Z" id="Oval-3" stroke="#C7C7C6" stroke-width="12"></path>
+                        <path d="M45.4609375,12.0774753 C20.6081225,12.0774753 0.4609375,32.2246604 0.4609375,57.0774753 C0.4609375,81.9302903 21.0330141,102.077475 45.4609375,102.077475 C69.8888609,102.077475 80.5349672,85.1372661 80.5349672,85.1372661" id="Oval-3" stroke="#734199" stroke-width="12"></path>
+                        <path d="M78.2536285,45.3770131 C78.2536285,21.2530936 61.3728,8.35191716 52.9395324,4.45495619" id="Oval-3-Copy" stroke="#4A90E2" stroke-width="12" transform="translate(65.596580, 24.915985) rotate(-26.000000) translate(-65.596580, -24.915985) "></path>
+                        <g id="Label" transform="translate(26.000000, 35.000000)" font-family="HelveticaNeue-Light, Helvetica Neue" font-weight="300">
+                            <text id="75" font-size="26" fill="#131313">
+                                <tspan x="2.544" y="25">75</tspan>
+                            </text>
+                            <text id="%" font-size="10" fill="#787678">
+                                <tspan x="33.555" y="14">%</tspan>
+                            </text>
+                            <text id="Negative" font-size="10" fill="#787678">
+                                <tspan x="0.695" y="39">Negative</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

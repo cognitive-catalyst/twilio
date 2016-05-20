@@ -1,0 +1,12 @@
+.app {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    max-width:1200px;
+    padding:0px 30px;
+
+    .header{
+        width:100%;
+        margin-bottom:30px;
+    }
+}

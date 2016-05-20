@@ -1,0 +1,27 @@
+.home{
+    display:flex;
+    flex-direction:row;
+
+    .chart{
+        margin-right:30px;
+        align-self:flex-start;
+    }
+    .right-col{
+        width:100%;
+    }
+
+    .message-type{
+        display:flex;
+        width:100px;
+        margin-bottom:30px;
+        .message-type-option{
+            cursor:pointer;
+            margin-right:30px;
+            font-weight:800;
+        }
+
+        .completed{
+            color:#00B39F;
+        }
+    }
+}

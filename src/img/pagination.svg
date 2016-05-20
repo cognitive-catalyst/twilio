@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="289px" height="33px" viewBox="0 0 289 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.1 (29687) - http://www.bohemiancoding.com/sketch -->
+    <title>pagination</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="33" height="33"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <rect id="path-3" x="192" y="0" width="33" height="33"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <rect id="path-5" x="256" y="0" width="33" height="33"></rect>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+        <rect id="path-7" x="32" y="0" width="33" height="33"></rect>
+        <mask id="mask-8" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+        <rect id="path-9" x="64" y="0" width="33" height="33"></rect>
+        <mask id="mask-10" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-9"></use>
+        </mask>
+        <rect id="path-11" x="96" y="0" width="33" height="33"></rect>
+        <mask id="mask-12" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-11"></use>
+        </mask>
+        <rect id="path-13" x="128" y="0" width="33" height="33"></rect>
+        <mask id="mask-14" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-13"></use>
+        </mask>
+        <rect id="path-15" x="160" y="0" width="33" height="33"></rect>
+        <mask id="mask-16" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-15"></use>
+        </mask>
+        <rect id="path-17" x="224" y="0" width="33" height="33"></rect>
+        <mask id="mask-18" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="33" height="33" fill="white">
+            <use xlink:href="#path-17"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="dash-copy-2" transform="translate(-202.000000, -905.000000)">
+            <g id="pagination" transform="translate(202.000000, 905.000000)">
+                <use id="pgntn_bg_left_end" stroke="#FFFFFF" mask="url(#mask-2)" stroke-width="2" fill="#ECECEC" xlink:href="#path-1"></use>
+                <use id="pgntn_bg_right_end" stroke="#FFFFFF" mask="url(#mask-4)" stroke-width="2" fill="#ECECEC" xlink:href="#path-3"></use>
+                <use id="pgntn_bg_right_end-copy" stroke="#FFFFFF" mask="url(#mask-6)" stroke-width="2" fill="#ECECEC" xlink:href="#path-5"></use>
+                <use id="pgntn_bg_active" stroke="#FFFFFF" mask="url(#mask-8)" stroke-width="2" fill="#787678" xlink:href="#path-7"></use>
+                <use id="pgntn_bg" stroke="#FFFFFF" mask="url(#mask-10)" stroke-width="2" fill="#ECECEC" xlink:href="#path-9"></use>
+                <use id="pgntn_bg" stroke="#FFFFFF" mask="url(#mask-12)" stroke-width="2" fill="#ECECEC" xlink:href="#path-11"></use>
+                <use id="pgntn_bg" stroke="#FFFFFF" mask="url(#mask-14)" stroke-width="2" fill="#ECECEC" xlink:href="#path-13"></use>
+                <use id="pgntn_bg" stroke="#FFFFFF" mask="url(#mask-16)" stroke-width="2" fill="#ECECEC" xlink:href="#path-15"></use>
+                <use id="pgntn_bg-copy" stroke="#FFFFFF" mask="url(#mask-18)" stroke-width="2" fill="#ECECEC" xlink:href="#path-17"></use>
+                <text id="1" font-family="HelveticaNeue-Bold, Helvetica Neue" font-size="12" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="45.664" y="21">1</tspan>
+                </text>
+                <text id="2" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="77.664" y="21">2</tspan>
+                </text>
+                <text id="3" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="109.664" y="21">3</tspan>
+                </text>
+                <text id="…" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="139" y="21">…</tspan>
+                </text>
+                <text id="10" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="170.328" y="21">10</tspan>
+                </text>
+                <text id="11" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="202.328" y="21">11</tspan>
+                </text>
+                <text id="12" font-family="HelveticaNeue-Light, Helvetica Neue" font-size="12" font-weight="300" fill="#00B39F">
+                    <tspan x="234.328" y="21">12</tspan>
+                </text>
+                <path d="M275.1,16.4222221 C275.1,16.2421874 275.025868,16.072743 274.898785,15.9456596 L270.15434,11.2012153 C270.027257,11.0741319 269.857812,11 269.677778,11 C269.307118,11 269,11.3071181 269,11.6777778 L269,21.1666665 C269,21.5373262 269.307118,21.8444443 269.677778,21.8444443 C269.857812,21.8444443 270.027257,21.7703123 270.15434,21.643229 L274.898785,16.8987846 C275.025868,16.7717013 275.1,16.6022569 275.1,16.4222221 L275.1,16.4222221 Z" id="&gt;" fill="#00B39F"></path>
+                <path d="M19.0999999,16.4222221 C19.0999999,16.2421874 19.025868,16.072743 18.8987846,15.9456596 L14.1543403,11.2012153 C14.0272569,11.0741319 13.8578125,11 13.6777778,11 C13.3071181,11 13,11.3071181 13,11.6777778 L13,21.1666665 C13,21.5373262 13.3071181,21.8444443 13.6777778,21.8444443 C13.8578125,21.8444443 14.0272569,21.7703123 14.1543403,21.643229 L18.8987846,16.8987846 C19.025868,16.7717013 19.0999999,16.6022569 19.0999999,16.4222221 L19.0999999,16.4222221 Z" id="&lt;" fill="#00B39F" transform="translate(16.050000, 16.422222) rotate(-180.000000) translate(-16.050000, -16.422222) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
