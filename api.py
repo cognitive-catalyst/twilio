@@ -5,10 +5,6 @@ from flask import Blueprint, request
 
 blueprint = Blueprint("api", __name__)
 
-keywords = Keywords()
-entities = Entities()
-concepts = Concepts()
-
 connection = pymysql.connect(host='169.44.9.188',
                              user='SQL_USER',
                              password='12212xlk821',
