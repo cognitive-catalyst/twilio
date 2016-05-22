@@ -1,0 +1,20 @@
+<svg width="140px" height="120px" viewBox="0 0 140 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Chart" transform="translate(24.000000, 0)">
+            <path d="M45.4609375,102.077475 C70.3137525,102.077475 90.4609375,81.9302903 90.4609375,57.0774753 C90.4609375,32.2246604 70.3137525,12.0774753 45.4609375,12.0774753 C20.6081225,12.0774753 0.4609375,32.2246604 0.4609375,57.0774753 C0.4609375,81.9302903 20.6081225,102.077475 45.4609375,102.077475 Z" id="Oval-3" stroke="#C7C7C6" stroke-width="12"></path>
+            <path d="M45.4609375,12.0774753 C20.6081225,12.0774753 0.4609375,32.2246604 0.4609375,57.0774753 C0.4609375,81.9302903 21.0330141,102.077475 45.4609375,102.077475 C69.8888609,102.077475 80.5349672,85.1372661 80.5349672,85.1372661" id="Oval-3" stroke="#734199" stroke-width="12"></path>
+            <path d="M78.2536285,45.3770131 C78.2536285,21.2530936 61.3728,8.35191716 52.9395324,4.45495619" id="Oval-3-Copy" stroke="#4A90E2" stroke-width="12" transform="translate(65.596580, 24.915985) rotate(-26.000000) translate(-65.596580, -24.915985) "></path>
+            <g id="Label" transform="translate(26.000000, 35.000000)" font-family="HelveticaNeue-Light, Helvetica Neue" font-weight="300">
+                <text id="75" font-size="26" fill="#131313">
+                    <tspan x="2.544" y="25">75</tspan>
+                </text>
+                <text id="%" font-size="10" fill="#787678">
+                    <tspan x="33.555" y="14">%</tspan>
+                </text>
+                <text id="Negative" font-size="10" fill="#787678">
+                    <tspan x="0.695" y="39">Negative</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -25,17 +25,13 @@ const Route = ({keywords}) => {
                 valString = 'Luggage'
                 topRel = relevance
             } else if (customer_service.indexOf(k.toLowerCase()) != -1 &&  relevance > topRel){
-                console.log('here service')
 
                 valString ='Customer Service'
                 topRel = relevance
             } else if (weather_delay.indexOf(k.toLowerCase()) != -1 &&  relevance > topRel){
-                console.log('here')
                 valString ='Weather Delay'
                 topRel = relevance
             }
-
-            // console.log(topRel + valString)
         }
     }
     return (

@@ -1,0 +1,42 @@
+$chart-height: 260;
+$chart-width: 140;
+//$chart-padding: 20;
+$primary-color: #333;
+
+.chart{
+    height: 260;
+    min-width: 140;
+    background-color:#ececec;
+    display:flex;
+    align-items:center;
+    flex-direction:column;
+    color:#7A7A7A;
+
+    .circle{
+        margin-top:1px;
+    }
+    .sentiment-score{
+        margin:15px 0 8px 0;
+    }
+
+    .time-row{
+        display:flex;
+
+        .arrow{
+            margin-left:3px;
+            color: #C7C7C7;;
+        }
+    }
+    .time{
+        font-weight:900;
+        text-transform:uppercase;
+    }
+
+    .circle{
+        width:100%;
+    }
+    .number{
+        font-size:16px;
+        color:black;
+    }
+}

@@ -180,11 +180,21 @@ def get_messages():
 @reconnect
 @blueprint.route('/get_relationships')
 def get_relationships():
-    # message_body = request.form['Body']
-    # add_ons = json.loads(request.form['AddOns'])
 
     with connection.cursor() as cursor:
         sql = '''SELECT * FROM relationships'''
         cursor.execute(sql)
         result = cursor.fetchall()
+    return json.dumps(result)
+
+
+@reconnect
+@blueprint.route('/get_num_messages')
+def get_num_messages():
+    with connection.cursor() as cursor:
+        sql = '''SELECT count(*) as num_messages FROM messages'''
+        cursor.execute(sql)
+        result = cursor.fetchone()
+
+    result['num_messages'] += 70
     return json.dumps(result)

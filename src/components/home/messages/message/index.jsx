@@ -17,8 +17,6 @@ export default ({text, phoneNumber, city, state, day, time, keywords, concepts, 
                 time={time}
             />
             <MessageBody text={text} keywords={keywords}/>
-            {//}<h3 className='message-body'>{text}</h3>
-            }
         </div>
         <div className = 'message-right'>
             <Sentiment sentiment={sentiment}/>
