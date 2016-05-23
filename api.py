@@ -40,6 +40,7 @@ def reconnect(func):
                                          cursorclass=pymysql.cursors.DictCursor)
             func()
         print "committed"
+    return wrapper
 
 
 @reconnect
