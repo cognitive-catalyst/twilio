@@ -12,6 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.11.1",
+    "classnames": "^2.2.5",
+    "d3": "^3.5.17",
+    "file-loader": "^0.8.5",
+    "lodash": "^4.13.1",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-router": "^2.0.0"

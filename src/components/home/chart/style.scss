@@ -12,9 +12,6 @@ $primary-color: #333;
     flex-direction:column;
     color:#7A7A7A;
 
-    .circle{
-        margin-top:1px;
-    }
     .sentiment-score{
         margin:15px 0 8px 0;
     }
@@ -32,9 +29,11 @@ $primary-color: #333;
         text-transform:uppercase;
     }
 
-    .circle{
-        width:100%;
+    .circle {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
+
     .number{
         font-size:16px;
         color:black;
