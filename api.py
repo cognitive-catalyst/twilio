@@ -190,14 +190,16 @@ def get_relationships():
 
 
 @reconnect
-@blueprint.route('/get_num_messages')
-def get_num_messages():
+@blueprint.route('/get_num_messages/<days>')
+def get_num_messages(days):
     with connection.cursor() as cursor:
-        sql = '''SELECT count(*) as num_messages FROM messages'''
+        sql = '''
+            SELECT count(*) as num_messages FROM messages
+            WHERE timestamp >= (now() - INTERVAL ''' + days + ''' DAY)
+        '''
         cursor.execute(sql)
         result = cursor.fetchone()
 
-    result['num_messages'] += 70
     return json.dumps(result)
 
 @reconnect
