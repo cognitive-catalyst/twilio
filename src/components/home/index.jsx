@@ -12,26 +12,13 @@ export default class Home extends React.Component {
 
         this.state = {
             numMessages: '...',
-            data: [
-                {
-                    label: 'Positive',
-                    value: 33,
-                    color: '#4A90E2'
-                }, {
-                    label: 'Neutral',
-                    value: 33,
-                    color: '#C7C7C6'
-                }, {
-                    label: 'Negative',
-                    value: 33,
-                    color: '#734199'
-                }
-            ]
+            sentimentCount: []
         }
     }
 
     componentDidMount() {
-        this.getMessagesCount()
+        this.getMessagesCount();
+        this.getSentimentCount(100);
     }
 
     getMessagesCount = () => {
@@ -40,10 +27,16 @@ export default class Home extends React.Component {
         })
     }
 
+    getSentimentCount = (num_days) => {
+        axios.get(`/api/get_sentiment_count/${num_days}`).then(resp => {
+            this.setState({sentimentCount: resp.data || []})
+        })
+    }
+
     render() {
         return (
             <div className='home'>
-                <Chart number={this.state.numMessages} data={this.state.data}/>
+                <Chart number={this.state.numMessages} data={this.state.sentimentCount}/>
                 <div className='right-col'>
                     <div className='message-type'>
                         <h3 className='message-type-option incoming'>INCOMING</h3>
