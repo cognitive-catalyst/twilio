@@ -190,12 +190,35 @@ def get_relationships():
 
 
 @reconnect
-@blueprint.route('/get_num_messages')
-def get_num_messages():
+@blueprint.route('/get_num_messages/<days>')
+def get_num_messages(days):
     with connection.cursor() as cursor:
-        sql = '''SELECT count(*) as num_messages FROM messages'''
+        sql = '''
+            SELECT count(*) as num_messages FROM messages
+            WHERE timestamp >= (now() - INTERVAL ''' + days + ''' DAY)
+        '''
         cursor.execute(sql)
         result = cursor.fetchone()
 
-    result['num_messages'] += 70
+    return json.dumps(result)
+
+@reconnect
+@blueprint.route('/get_sentiment_count/<days>')
+def get_sentiment_count(days):
+    with connection.cursor() as cursor:
+        sql = '''
+            SELECT CONCAT(UCASE(LEFT(sentiment, 1)), LCASE(SUBSTRING(sentiment, 2))) as label, count(sentiment) as value,
+            case
+                when LOWER(sentiment) = 'positive' then '#4A90E2'
+                when LOWER(sentiment) = 'negative' then '#734199'
+                when LOWER(sentiment) = 'neutral' then '#C7C7C6' end as color
+            FROM messages
+            WHERE timestamp >= (now() - INTERVAL ''' + days + ''' DAY)
+            GROUP BY sentiment
+        '''
+        cursor.execute(sql)
+        result = cursor.fetchall()
+
+
+
     return json.dumps(result)

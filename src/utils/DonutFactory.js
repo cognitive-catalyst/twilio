@@ -61,6 +61,7 @@ function create(element, options) {
             d3.select('#percentText' + element).text('NO');
             d3.select('#labelText' + element).text('DATA');
             d3.select('#percentLabelText' + element).text('');
+            return;
         }
         let total = dataset.reduce((total, next) => total + next.value, 0);
         let maxObj = dataset.reduce((a, b) => a.value > b.value ? a : b);
@@ -76,17 +77,24 @@ function create(element, options) {
             path.attr('fill', d => d.data.color);
             path.attr('d', arc);
             dataset = data;
+            addEventListeners();
             setDefaultText();
         }
     }
 
-    path.on('mouseover', d => {
-        let total = dataset.reduce((total, next) => total + next.value, 0);
-        let percent = Math.round(100 * d.data.value / total);
-        setText(percent, d.data.label);
-    });
+    function addEventListeners() {
+        path.on('mouseover', null);
+        path.on('mouseout', null);
+        path.on('mouseover', d => {
+            let total = dataset.reduce((total, next) => total + next.value, 0);
+            let percent = Math.round(100 * d.data.value / total);
+            setText(percent, d.data.label);
+        });
 
-    path.on('mouseout', () => setDefaultText());
+        path.on('mouseout', () => setDefaultText());
+    }
+
+    addEventListeners();
 
     return {
         setText,
