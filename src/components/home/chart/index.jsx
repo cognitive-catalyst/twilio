@@ -9,10 +9,10 @@ class Chart extends Component {
         this.state = {
             value: 30,
             options: [
-                { value: 1, name: "24 Hours" },
-                { value: 7, name: "7 Days" },
-                { value: 30, name: "1 Month" },
-                { value: 9999, name: "All" }
+                { value: 1, name: "24 HOURS" },
+                { value: 7, name: "7 DAYS" },
+                { value: 30, name: "1 MONTH" },
+                { value: 9999, name: "ALL" }
             ]
         };
     }
@@ -27,12 +27,11 @@ class Chart extends Component {
     }
 
     render() {
-        console.log(this.props.data)
         return (
             <div className='chart'>
                 <h3 className='sentiment-score'>Sentiment Score</h3>
                 <div className='time-row'>
-                    <select onChange={this.handleOnChange} value={this.state.value}>
+                    <select onChange={this.handleOnChange} value={this.state.value} className='duration-dropdown'>
                         {this.state.options.map((item, key) => <option key={key} value={item.value}>{item.name}</option>)}
                     </select>
                 </div>

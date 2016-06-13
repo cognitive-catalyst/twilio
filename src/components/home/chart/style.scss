@@ -1,41 +1,55 @@
 $chart-height: 260;
-$chart-width: 140;
-//$chart-padding: 20;
+$chart-width: 140; //$chart-padding: 20;
 $primary-color: #333;
-
-.chart{
+.chart {
     height: 260;
     min-width: 140;
-    background-color:#ececec;
-    display:flex;
-    align-items:center;
-    flex-direction:column;
-    color:#7A7A7A;
-
-    .sentiment-score{
-        margin:15px 0 8px 0;
+    background-color: #ececec;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #7A7A7A;
+    .sentiment-score {
+        margin: 15px 0 8px;
     }
-
-    .time-row{
-        display:flex;
-
-        .arrow{
-            margin-left:3px;
-            color: #C7C7C7;;
+    .time-row {
+        display: flex;
+        .arrow {
+            margin-left: 3px;
+            color: #C7C7C7;
         }
     }
-    .time{
-        font-weight:900;
-        text-transform:uppercase;
+    .time {
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+    .duration-dropdown {
+        // -webkit-appearance: none;
+        // -moz-appearance: none;
+        // appearance: none;
+        background: transparent;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border: none;
+        color: #787678;
+        max-width: 85px;
+        outline: none;
     }
 
+    /*target Internet Explorer 9 and Internet Explorer 10:*/
+    @media screen and (min-width: 0\0) {
+        select {
+            background: none;
+            padding: 5px;
+        }
+    }
     .circle {
         margin-top: 10px;
         margin-bottom: 10px;
     }
-
-    .number{
-        font-size:16px;
-        color:black;
+    .number {
+        font-size: 16px;
+        color: black;
     }
 }

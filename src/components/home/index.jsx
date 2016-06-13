@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Messages from './messages';
 import axios from 'axios';
+import io from 'socket.io-client';
+import Messages from './messages';
 import Chart from './chart';
 import Pagination from 'img/pagination.svg';
 
@@ -8,8 +9,14 @@ import './style.scss'
 
 export default class Home extends Component {
     constructor(props) {
-        super(props)
-
+        super(props);
+        this.socket = io();
+        this.socket.on('connect', () => {
+            console.log('Socket Connection Established');
+        });
+        this.socket.on('disconnect', () => {
+            console.log('Socket Disconnected');
+        });
         this.state = {
             messages: [],
             numMessages: '...',
@@ -29,17 +36,11 @@ export default class Home extends Component {
     // }
 
     componentWillMount() {
-        this.getMessages();
-        setInterval(this.getMessages, 2000);
-    }
-
-    getMessages = () => {
-        axios.get('/api/get_messages', {})
-            .then( (resp) => {
-                this.setState({
-                    messages: resp.data
-                })
-            })
+        this.socket.emit('init data');
+        this.socket.on('data', (data) => {
+            console.log("Socket Data Received");
+            this.setState({messages: JSON.parse(data)});
+        })
     }
 
     getSentimentCount = (num_days) => {

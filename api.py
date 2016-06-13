@@ -2,6 +2,7 @@ import json
 
 import pymysql.cursors
 from flask import Blueprint, request
+from flask_socketio import emit
 
 blueprint = Blueprint("api", __name__)
 
@@ -38,8 +39,9 @@ def reconnect(func):
                                          db='twilio',
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor)
-            func()
-        print "committed"
+            retval = func()
+            return retval
+        # print "committed"
     return wrapper
 
 
@@ -74,6 +76,7 @@ def create_db():
 @blueprint.route('/message', methods=['POST'])
 def message():
     message_body = request.form['Body']
+    print message_body
     phone_number = request.form['From']
     city = request.form['FromCity']
     state = request.form['FromState']
@@ -115,6 +118,9 @@ def message():
 
     connection.commit()
 
+    # Emit the data via websocket
+    emit('data', get_messages());
+
     return json.dumps({'status': 'success'})
 
 
@@ -123,7 +129,7 @@ def _num_to_day(num):
     return days[num]
 
 
-@reconnect
+# @reconnect
 @blueprint.route('/get_messages')
 def get_messages():
     with connection.cursor() as cursor:
