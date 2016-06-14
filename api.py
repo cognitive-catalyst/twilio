@@ -4,6 +4,7 @@ import pymysql.cursors
 from flask import Blueprint, request
 
 blueprint = Blueprint("api", __name__)
+socketio = None
 
 connection = pymysql.connect(host='169.44.9.188',
                              user='SQL_USER',
@@ -119,7 +120,7 @@ def message():
     connection.commit()
 
     # Emit the data via websocket
-    # emit('data', get_messages());
+    socketio.emit('data', get_messages());
 
     return json.dumps({'status': 'success'})
 

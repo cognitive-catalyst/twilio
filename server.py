@@ -11,6 +11,8 @@ app.register_blueprint(api.blueprint, url_prefix='/api')
 
 socketio = SocketIO(app)
 
+api.socketio = socketio;
+
 @app.route('/')
 def html():
     ''' Serves the index.html file for frontend views'''
