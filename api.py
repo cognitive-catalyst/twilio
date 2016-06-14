@@ -2,7 +2,6 @@ import json
 
 import pymysql.cursors
 from flask import Blueprint, request
-from flask_socketio import emit
 
 blueprint = Blueprint("api", __name__)
 
@@ -58,6 +57,7 @@ def create_db():
                 state VARCHAR(2),
                 sentiment VARCHAR(15),
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                completed BOOL NOT NULL DEFAULT 0,
                 PRIMARY KEY (id)); '''
         cursor.execute(sql)
 
@@ -119,7 +119,7 @@ def message():
     connection.commit()
 
     # Emit the data via websocket
-    emit('data', get_messages());
+    # emit('data', get_messages());
 
     return json.dumps({'status': 'success'})
 
