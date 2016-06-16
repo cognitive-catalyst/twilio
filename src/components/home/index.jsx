@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
+import classNames from 'classnames';
 import Messages from './messages';
 import Chart from './chart';
 import Pagination from 'img/pagination.svg';
@@ -17,33 +18,44 @@ export default class Home extends Component {
         this.socket.on('disconnect', () => {
             console.log('Socket Disconnected');
         });
+        this.socket.on('new incoming data', (data) => {
+            if(this.state.renderIncoming) {
+                // Update the sentiment count and messages count when there is a new incoming data
+                this.getSentimentCount(this.state.numDays);
+                this.setState({messages: JSON.parse(data)});
+            }
+        })
+        this.socket.on('new archived data', (data) => {
+            if(!this.state.renderIncoming) {
+                this.setState({messages: JSON.parse(data)});
+            }
+        })
         this.state = {
             messages: [],
             numMessages: '...',
-            sentimentCount: []
+            sentimentCount: [],
+            renderIncoming: true
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState){
-    //     if (this.state.messages.length === 0){
-    //         return true
-    //     } else if (this.state.messages[0].time !== nextState.messages[0].time){
-    //         this.getMessagesCount();
-    //         return true
-    //     } else {
-    //         return false
-    //     }
-    // }
+    handleIncomingMessageHeaderClick = () => {
+        this.setState({renderIncoming: true}, () => {
+            this.socket.emit('get init incoming data');
+        });
+    }
+
+    handleArchivedMessageHeaderClick = () => {
+        this.setState({renderIncoming: false}, () => {
+            this.socket.emit('get init archived data');
+        });
+    }
 
     componentWillMount() {
-        this.socket.emit('init data');
-        this.socket.on('data', (data) => {
-            console.log("Socket Data Received");
-            this.setState({messages: JSON.parse(data)});
-        })
+        this.socket.emit('get init incoming data');
     }
 
     getSentimentCount = (num_days) => {
+        this.setState({numDays: num_days});
         axios.get(`/api/get_sentiment_count/${num_days}`).then(resp => {
             this.setState({sentimentCount: resp.data})
         })
@@ -59,8 +71,14 @@ export default class Home extends Component {
                 <Chart onDurationChange={this.getSentimentCount} number={this.state.numMessages} data={this.state.sentimentCount}/>
                 <div className='right-col'>
                     <div className='message-type'>
-                        <h3 className='message-type-option incoming'>INCOMING</h3>
-                        <h3 className='message-type-option completed'>COMPLETED</h3>
+                        <h3 onClick={this.handleIncomingMessageHeaderClick}
+                            className={classNames('message-type-option', {'active': this.state.renderIncoming})}>
+                            INCOMING
+                        </h3>
+                        <h3 onClick={this.handleArchivedMessageHeaderClick}
+                            className={classNames('message-type-option', {'active': !this.state.renderIncoming})}>
+                            ARCHIVED
+                        </h3>
                     </div>
                     <Messages data={this.state.messages}/>
                     <img src={Pagination} className='pagination'/>

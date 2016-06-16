@@ -1,3 +1,19 @@
+.show {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+
 .app {
     display:flex;
     flex-direction:column;

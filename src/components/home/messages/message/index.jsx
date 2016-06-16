@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import MessageHeader from './messageHeader';
 import './style.scss';
 import {Sentiment, Route, Entities, Concepts} from './messageInfo';
@@ -6,28 +7,46 @@ import Check from 'img/check.svg';
 import CheckDone from 'img/check-done.svg';
 
 
-export default ({text, phoneNumber, city, state, day, time, keywords, concepts, entities, sentiment}) => (
-    <div className='message'>
-        <div className = 'message-left'>
-            <MessageHeader
-                phoneNumber={phoneNumber}
-                city={city}
-                state={state}
-                day={day}
-                time={time}
-            />
-            <MessageBody text={text} keywords={keywords}/>
-        </div>
-        <div className = 'message-right'>
-            <Sentiment sentiment={sentiment}/>
-            <Route keywords={keywords}/>
-            <Entities entities={entities}/>
-            <Concepts concepts={concepts}/>
-        </div>
-        <img src={Check} className='check'></img>
-    </div>
-)
+export default class Message extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            imgSrc: Check
+        }
+    }
+
+    handleOnClick = () => {
+        this.setState({imgSrc: CheckDone});
+    }
+
+    render() {
+        const {id, text, phoneNumber, city, state, day, time, keywords, concepts, entities, sentiment, archived_day, archived_time} = this.props;
+        return (
+            <div className='message'>
+                <div className = 'message-left'>
+                    <MessageHeader
+                        phoneNumber={phoneNumber}
+                        city={city}
+                        state={state}
+                        day={day}
+                        time={time}
+                        archived_day={archived_day}
+                        archived_time={archived_time}
+                    />
+                    <MessageBody text={text} keywords={keywords}/>
+                </div>
+                <div className = 'message-right'>
+                    <Sentiment sentiment={sentiment}/>
+                    <Route keywords={keywords}/>
+                    <Entities entities={entities}/>
+                    <Concepts concepts={concepts}/>
+                </div>
+                <img src={this.state.imgSrc} onClick={this.handleOnClick} className={classNames('check', {'invisible': archived_day})}></img>
+            </div>
+        )
+    }
+}
 
 class MessageBody extends React.Component {
 

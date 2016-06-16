@@ -19,6 +19,7 @@
         width:100px;
         margin-bottom:30px;
         .message-type-option{
+            color:#00B39F;
             cursor:pointer;
             margin-right:30px;
             font-weight:800;
@@ -28,8 +29,8 @@
             }
         }
 
-        .completed{
-            color:#00B39F;
+        .active{
+            color: #131313
         }
     }
 }
