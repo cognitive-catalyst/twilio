@@ -1,11 +1,13 @@
 import React from 'react';
 import Message from './message';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import './style.scss';
 
 export default ({data}) => {
-    const messages = data.map((m, i) => {
+    const messages = data.map((m) => {
         return (
             <Message
-                key={i}
+                key={m.id}
                 id={m.id}
                 text={m.text}
                 phoneNumber={m.phone_number}
@@ -23,8 +25,8 @@ export default ({data}) => {
         )
     })
     return(
-        <div className='messages'>
+        <ReactCSSTransitionGroup transitionName="switch" transitionAppear={true}>
             {messages}
-        </div>
+        </ReactCSSTransitionGroup>
     )
 }

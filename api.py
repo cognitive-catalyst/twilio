@@ -120,7 +120,7 @@ def message():
     connection.commit()
 
     # Emit the data via websocket
-    socketio.emit('new incoming data', get_messages());
+    socketio.emit('incoming data', get_messages());
 
     return json.dumps({'status': 'success'})
 
@@ -295,7 +295,7 @@ def get_sentiment_count(days):
     return json.dumps(result)
 
 @reconnect
-@blueprint.route('/archive_message/<id>')
+@blueprint.route('/archive_message/<id>', methods=['POST'])
 def archive_message(id):
     with connection.cursor() as cursor:
         sql = '''
@@ -306,4 +306,6 @@ def archive_message(id):
         cursor.execute(sql, [id])
 
     connection.commit();
+    socketio.emit('incoming data', get_messages());
+    socketio.emit('archived data', get_archived_messages());
     return json.dumps({'status': 'success'})

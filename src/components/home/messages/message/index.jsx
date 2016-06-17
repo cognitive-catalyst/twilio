@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import MessageHeader from './messageHeader';
+import axios from 'axios';
 import './style.scss';
 import {Sentiment, Route, Entities, Concepts} from './messageInfo';
 import Check from 'img/check.svg';
@@ -17,7 +18,9 @@ export default class Message extends React.Component {
     }
 
     handleOnClick = () => {
-        this.setState({imgSrc: CheckDone});
+        this.setState({imgSrc: CheckDone}, () => {
+            axios.post(`/api/archive_message/${this.props.id}`);
+        });
     }
 
     render() {

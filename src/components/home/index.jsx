@@ -18,14 +18,14 @@ export default class Home extends Component {
         this.socket.on('disconnect', () => {
             console.log('Socket Disconnected');
         });
-        this.socket.on('new incoming data', (data) => {
+        this.socket.on('incoming data', (data) => {
             if(this.state.renderIncoming) {
                 // Update the sentiment count and messages count when there is a new incoming data
                 this.getSentimentCount(this.state.numDays);
                 this.setState({messages: JSON.parse(data)});
             }
         })
-        this.socket.on('new archived data', (data) => {
+        this.socket.on('archived data', (data) => {
             if(!this.state.renderIncoming) {
                 this.setState({messages: JSON.parse(data)});
             }

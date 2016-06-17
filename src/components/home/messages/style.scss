@@ -1,0 +1,25 @@
+.switch-enter {
+    opacity: 0.01;
+}
+.switch-enter.switch-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+.switch-leave {
+    /* Completely hide the message while it's being animated and before it's removed from the DOM. */
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    opacity: 1;
+}
+.switch-leave.switch-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+}
+.switch-appear {
+    opacity: 0.01;
+}
+.switch-appear.switch-appear-active {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+}
