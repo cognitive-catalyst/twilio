@@ -33,5 +33,6 @@ def handle_init_data():
     emit('archived data', api.get_archived_messages());
 
 if __name__ == '__main__':
+    host = os.getenv('VCAP_APP_HOST', '0.0.0.0')
     port = int(os.getenv('VCAP_APP_PORT', '8888'))
-    socketio.run(app, host="0.0.0.0", port=port, debug=True)
+    socketio.run(app, host=host, port=port, debug=False)

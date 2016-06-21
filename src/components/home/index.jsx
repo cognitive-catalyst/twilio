@@ -21,13 +21,17 @@ export default class Home extends Component {
         this.socket.on('incoming data', (data) => {
             if(this.state.renderIncoming) {
                 // Update the sentiment count and messages count when there is a new incoming data
+                console.log('Incoming Data', this.state.renderIncoming, data);
                 this.getSentimentCount(this.state.numDays);
                 this.setState({messages: JSON.parse(data)});
+                this.forceUpdate();
             }
         })
         this.socket.on('archived data', (data) => {
             if(!this.state.renderIncoming) {
+                console.log('Archived Data', this.state.renderIncoming, data);
                 this.setState({messages: JSON.parse(data)});
+                this.forceUpdate();
             }
         })
         this.state = {

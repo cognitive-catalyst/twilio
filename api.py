@@ -1,18 +1,50 @@
 import json
-
+import os
+import atexit
+import sys
 import pymysql.cursors
 from flask import Blueprint, request
 
 blueprint = Blueprint("api", __name__)
 socketio = None
+hostname = None
+port = None
+username = None
+password = None
+db = None
 
-connection = pymysql.connect(host='169.44.9.188',
-                             user='SQL_USER',
-                             password='12212xlk821',
-                             db='twilio',
+if 'VCAP_SERVICES' in os.environ:
+    mysql_info = json.loads(os.environ['VCAP_SERVICES'])['cleardb'][0]
+    mysql_cred = mysql_info['credentials']
+    hostname = mysql_cred['hostname']
+    port = mysql_cred['port'] or 3306
+    username = mysql_cred['username']
+    password = mysql_cred['password']
+    db = mysql_cred['name']
+
+elif os.path.isfile('config.json'):
+    with open('config.json') as json_data:
+        try:
+            mysql_info = json.loads(json_data.read())
+            mysql_cred = mysql_info['credentials']
+            hostname = mysql_cred['hostname']
+            port = mysql_cred['port'] or 3306
+            username = mysql_cred['username']
+            password = mysql_cred['password']
+            db = mysql_cred['name']
+        except:
+            raise
+            sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials');
+
+else:
+    sys.exit('Database credentials not specified');
+
+connection = pymysql.connect(host=hostname,
+                             user=username,
+                             password=password,
+                             db=db,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
-
 
 def _drop_tables(cursor):
     try:
@@ -33,10 +65,10 @@ def reconnect(func):
         try:
             func()
         except pymysql.err.OperationalError:
-            connection = pymysql.connect(host='169.44.9.188',
-                                         user='SQL_USER',
-                                         password='12212xlk821',
-                                         db='twilio',
+            connection = pymysql.connect(host=hostname,
+                                         user=username,
+                                         password=password,
+                                         db=db,
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor)
             retval = func()
@@ -44,25 +76,27 @@ def reconnect(func):
         # print "committed"
     return wrapper
 
+def close_db(con):
+    con.close()
+
+atexit.register(close_db, con=connection)
 
 @reconnect
-@blueprint.route('/create_db')
 def create_db():
     with connection.cursor() as cursor:
-        _drop_tables(cursor)
-        sql = '''CREATE TABLE messages
+        sql = '''CREATE TABLE IF NOT EXISTS messages
                 (id INT AUTO_INCREMENT,
                 text VARCHAR(3000),
                 phone_number VARCHAR(15),
                 city VARCHAR(30),
                 state VARCHAR(2),
                 sentiment VARCHAR(15),
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                archived_timestamp DATETIME DEFAULT null,
+                timestamp DATETIME DEFAULT NULL,
+                archived_timestamp DATETIME DEFAULT NULL,
                 PRIMARY KEY (id)); '''
         cursor.execute(sql)
 
-        sql = '''CREATE TABLE relationships
+        sql = '''CREATE TABLE IF NOT EXISTS relationships
                 (message_id INT,
                 text VARCHAR(50),
                 type VARCHAR(25),
@@ -70,8 +104,7 @@ def create_db():
                 sentiment VARCHAR(12)); '''
         cursor.execute(sql)
 
-    return json.dumps({'status': 'success'})
-
+create_db();
 
 @reconnect
 @blueprint.route('/message', methods=['POST'])
@@ -93,8 +126,8 @@ def message():
     with connection.cursor() as cursor:
         parameters = [message_body, phone_number, city, state, sentiment]
         sql = '''INSERT INTO messages
-        (text, phone_number, city, state, sentiment)
-        VALUES(%s, %s, %s, %s, %s)'''
+        (text, phone_number, city, state, sentiment, timestamp)
+        VALUES(%s, %s, %s, %s, %s, NOW())'''
         cursor.execute(sql, parameters)
 
         parameters = []
