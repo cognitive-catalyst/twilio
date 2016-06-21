@@ -13,9 +13,6 @@ You can use this app in any browser.
 
 ## Run the app on Bluemix
 You can deploy your own instance of the demo app to Bluemix.
-[comment]: <> (To do this, you can either use the _Deploy to Bluemix_ button for an automated deployment or follow the steps below to create and deploy your app manually.)
-
-[comment]: <> ([![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.ibm.com/amblock/twilio))
 
 1. Create a Bluemix Account.
 
