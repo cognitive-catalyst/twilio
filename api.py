@@ -58,7 +58,7 @@ def create_db():
                 state VARCHAR(2),
                 sentiment VARCHAR(15),
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                completed BOOL NOT NULL DEFAULT 0,
+                archived_timestamp DATETIME DEFAULT null,
                 PRIMARY KEY (id)); '''
         cursor.execute(sql)
 
@@ -120,13 +120,13 @@ def message():
     connection.commit()
 
     # Emit the data via websocket
-    socketio.emit('data', get_messages());
+    socketio.emit('incoming data', get_messages());
 
     return json.dumps({'status': 'success'})
 
 
 def _num_to_day(num):
-    days = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"]
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     return days[num]
 
 
@@ -135,7 +135,8 @@ def _num_to_day(num):
 def get_messages():
     with connection.cursor() as cursor:
         sql = '''
-            SELECT  messages.text,
+            SELECT  messages.id,
+                    messages.text,
                     phone_number,
                     city,
                     state,
@@ -154,6 +155,7 @@ def get_messages():
             FROM messages
             JOIN relationships
             ON messages.id=relationships.message_id
+            WHERE messages.archived_timestamp is NULL
             GROUP BY messages.id
             ORDER BY timestamp desc
             LIMIT 5
@@ -184,6 +186,70 @@ def get_messages():
         r.pop('relationships')
     return json.dumps(result)
 
+# @reconnect
+@blueprint.route('/get_archived_messages')
+def get_archived_messages():
+    with connection.cursor() as cursor:
+        sql = '''
+            SELECT  messages.id,
+                    messages.text,
+                    phone_number,
+                    city,
+                    state,
+                    timestamp,
+                    messages.sentiment,
+                    messages.archived_timestamp,
+                    GROUP_CONCAT(
+                        CONCAT_WS(
+                            ":",
+                            relationships.type,
+                            relationships.text,
+                            relationships.relevance,
+                            relationships.sentiment
+                        )
+                        separator "|"
+                    ) as relationships
+            FROM messages
+            JOIN relationships
+            ON messages.id=relationships.message_id
+            WHERE messages.archived_timestamp is NOT NULL
+            GROUP BY messages.id
+            ORDER BY timestamp desc
+            LIMIT 5
+        '''
+        cursor.execute(sql)
+        result = cursor.fetchall()
+
+    for r in result:
+        timestamp = r['timestamp']
+        day_of_week = _num_to_day(timestamp.weekday())
+        day = timestamp.strftime("{0} %B %d".format(day_of_week))
+        time = str(timestamp.time())
+        r.pop('timestamp')
+        r['day'] = day
+        r['time'] = time
+
+        archived_timestamp = r['archived_timestamp']
+        archived_day_of_week = _num_to_day(archived_timestamp.weekday())
+        archived_day = archived_timestamp.strftime("{0} %B %d".format(archived_day_of_week))
+        archived_time = str(archived_timestamp.time())
+        r.pop('archived_timestamp')
+        r['archived_day'] = archived_day
+        r['archived_time'] = archived_time
+
+        relationships = r['relationships'].split('|')
+        r['keyword'] = {}
+        r['entity'] = {}
+        r['concept'] = {}
+        for rel in relationships:
+            details = rel.split(':')
+            r_type = details[0]
+            r[r_type][details[1]] = {
+                'relevance': details[2],
+                'sentiment': details[3]
+            }
+        r.pop('relationships')
+    return json.dumps(result)
 
 @reconnect
 @blueprint.route('/get_relationships')
@@ -202,9 +268,9 @@ def get_num_messages(days):
     with connection.cursor() as cursor:
         sql = '''
             SELECT count(*) as num_messages FROM messages
-            WHERE timestamp >= (now() - INTERVAL ''' + days + ''' DAY)
+            WHERE timestamp >= (now() - INTERVAL %s DAY)
         '''
-        cursor.execute(sql)
+        cursor.execute(sql, [days])
         result = cursor.fetchone()
 
     return json.dumps(result)
@@ -220,12 +286,26 @@ def get_sentiment_count(days):
                 when LOWER(sentiment) = 'negative' then '#734199'
                 when LOWER(sentiment) = 'neutral' then '#C7C7C6' end as color
             FROM messages
-            WHERE timestamp >= (now() - INTERVAL ''' + days + ''' DAY)
+            WHERE timestamp >= (now() - INTERVAL %s DAY)
             GROUP BY sentiment
         '''
-        cursor.execute(sql)
+        cursor.execute(sql, [days])
         result = cursor.fetchall()
 
-
-
     return json.dumps(result)
+
+@reconnect
+@blueprint.route('/archive_message/<id>', methods=['POST'])
+def archive_message(id):
+    with connection.cursor() as cursor:
+        sql = '''
+            UPDATE messages
+            SET archived_timestamp = NOW()
+            WHERE id = %s
+        '''
+        cursor.execute(sql, [id])
+
+    connection.commit();
+    socketio.emit('incoming data', get_messages());
+    socketio.emit('archived data', get_archived_messages());
+    return json.dumps({'status': 'success'})

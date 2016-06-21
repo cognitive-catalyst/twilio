@@ -24,9 +24,13 @@ def bundle():
     ''' Serves the bundle.js file that controls the frontend view'''
     return send_from_directory("build", "bundle.js")
 
-@socketio.on('init data')
+@socketio.on('get init incoming data')
 def handle_init_data():
-    emit('data', api.get_messages());
+    emit('incoming data', api.get_messages());
+
+@socketio.on('get init archived data')
+def handle_init_data():
+    emit('archived data', api.get_archived_messages());
 
 if __name__ == '__main__':
     port = int(os.getenv('VCAP_APP_PORT', '8888'))
