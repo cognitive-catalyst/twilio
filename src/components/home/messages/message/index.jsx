@@ -18,7 +18,8 @@ export default class Message extends React.Component {
 
     handleOnClick = () => {
         this.setState({ imgSrc: CheckDone }, () => {
-            axios.post(`/api/archive_message/${this.props.id}`);
+            // axios.post(`/api/archive_message/${this.props.id}`);
+            this.props.onArchive(this.props.id);
         });
     }
 

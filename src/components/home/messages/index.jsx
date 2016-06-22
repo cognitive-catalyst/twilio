@@ -3,7 +3,7 @@ import Message from './message';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './style.scss';
 
-export default ({ data }) => {
+export default ({ data, onArchive }) => {
     const messages = data.map((m) => {
         return (
       <Message
@@ -21,6 +21,7 @@ export default ({ data }) => {
         entities={m.entity}
         concepts={m.concept}
         sentiment={m.sentiment}
+        onArchive={onArchive}
       />
       );
     });

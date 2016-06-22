@@ -57,6 +57,10 @@ export default class Home extends Component {
         this.getSetMessages();
     }
 
+    onArchive(messageId) {
+        axios.post(`/api/archive_message/${messageId}`);
+    }
+
     getSetMessages() {
         axios.get(`/api/get_messages/${this.getPageNumber()}`).then(resp => {
             this.setState({
@@ -116,16 +120,19 @@ export default class Home extends Component {
 
 
     handleArchivedMessageHeaderClick = () => {
-        this.setState({ renderIncoming: false }, () => {
-            this.socket.emit('get init archived data');
-        });
+        // this.setState({ renderIncoming: false }, () => {
+        //     this.socket.emit('get init archived data');
+        // });
         this.context.router.push('/');
-
+        this.setState({ renderIncoming: false }, () => {
+            this.getSetArchivedMessages();
+        });
     }
 
     handleIncomingMessageHeaderClick =() => {
         this.setState({ renderIncoming: true }, () => {
-            this.socket.emit('get init incoming data');
+            this.getSetMessages();
+            // this.socket.emit('get init incoming data');
         });
         this.context.router.push('/');
 
@@ -155,7 +162,7 @@ export default class Home extends Component {
                             ARCHIVED
                         </h3>
                     </div>
-                    <Messages loading={this.state.loading} data={this.state.messages} />
+                    <Messages loading={this.state.loading} data={this.state.messages} onArchive={this.onArchive} />
                     <Pagination
                       currentPage={currentPage}
                       totalPages={this.state.totalPages}

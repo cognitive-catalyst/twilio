@@ -27,14 +27,14 @@ def bundle():
     return send_from_directory("build", "bundle.js")
 
 
-@socketio.on('get init incoming data')
-def handle_init_data(page=1):
-    emit('incoming data', api.get_messages(page))
-
-
-@socketio.on('get init archived data')
-def handle_init_archive_data(page=1):
-    emit('archived data', api.get_archived_messages(page))
+# @socketio.on('get init incoming data')
+# def handle_init_data(page=1):
+#     emit('incoming data', api.get_messages(page))
+#
+#
+# @socketio.on('get init archived data')
+# def handle_init_archive_data(page=1):
+#     emit('archived data', api.get_archived_messages(page))
 
 if __name__ == '__main__':
     port = int(os.getenv('VCAP_APP_PORT', '8888'))
