@@ -1,0 +1,29 @@
+.pagination{
+    display:flex;
+    .page-option{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        color:#00B39F;
+        height:31px;
+        width:31px;
+        background-color:#ececec;
+        margin-right:1px;
+        cursor:pointer;
+
+        &.active{
+            background-color:darken(#ececec, 10%);
+        }
+
+        &.left {
+            transform:rotate(270deg)
+        }
+        &.right {
+            transform:rotate(90deg)
+        }
+
+        &.page-arrow{
+            font-size:10px;
+        }
+    }
+}
