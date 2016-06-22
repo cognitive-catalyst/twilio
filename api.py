@@ -3,6 +3,7 @@ import json
 import math
 import os
 import sys
+from functools import wraps
 
 import pymysql.cursors
 from flask import Blueprint, request
@@ -66,19 +67,38 @@ def _drop_tables(cursor):
 
 
 def reconnect(func):
-    def wrapper():
-        global connection
-        try:
-            func()
-        except pymysql.err.OperationalError:
-            connection = pymysql.connect(host=hostname,
-                                         user=username,
-                                         password=password,
-                                         db=db,
-                                         charset='utf8mb4',
-                                         cursorclass=pymysql.cursors.DictCursor)
-            retval = func()
-            return retval
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        close_conn = False
+        conn = kwargs.get('conn')
+
+        if conn is None:
+            close_conn = True
+            conn = pymysql.connect(host=hostname,
+                                   user=username,
+                                   password=password,
+                                   db=db,
+                                   charset='utf8mb4',
+                                   cursorclass=pymysql.cursors.DictCursor)
+
+            kwargs['conn'] = conn
+        retval = func(*args, **kwargs)
+
+        if close_conn:
+            conn.commit()
+            conn.close()
+        return retval
+        # try:
+        #     func()
+        # except pymysql.err.OperationalError:
+        #     connection = pymysql.connect(host=hostname,
+        #                                  user=username,
+        #                                  password=password,
+        #                                  db=db,
+        #                                  charset='utf8mb4',
+        #                                  cursorclass=pymysql.cursors.DictCursor)
+        #     retval = func()
+        #     return retval
     return wrapper
 
 
@@ -89,8 +109,8 @@ atexit.register(close_db, con=connection)
 
 
 @reconnect
-def create_db():
-    with connection.cursor() as cursor:
+def create_db(conn=None):
+    with conn.cursor() as cursor:
         sql = '''CREATE TABLE IF NOT EXISTS messages
                 (id INT AUTO_INCREMENT,
                 text VARCHAR(3000),
@@ -114,9 +134,9 @@ def create_db():
 create_db()
 
 
-@reconnect
 @blueprint.route('/message', methods=['POST'])
-def message():
+@reconnect
+def message(conn=None):
     message_body = request.form['Body']
     phone_number = request.form['From']
     city = request.form['FromCity']
@@ -130,7 +150,7 @@ def message():
 
     data = addOns['results']['ibm_watson_insights']['result']
 
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         parameters = [message_body, phone_number, city, state, sentiment]
         sql = '''INSERT INTO messages
         (text, phone_number, city, state, sentiment, timestamp)
@@ -157,8 +177,6 @@ def message():
         VALUES(LAST_INSERT_ID(), %s, %s, %s, %s)'''
         cursor.executemany(sql, parameters)
 
-    connection.commit()
-
     # Emit the data via websocket
     socketio.emit('incoming data', get_messages())
 
@@ -172,9 +190,10 @@ def _num_to_day(num):
 
 @blueprint.route('/get_messages')
 @blueprint.route('/get_messages/<path:page_number>')
-def get_messages(page_number=1):
+@reconnect
+def get_messages(page_number=1, conn=None):
     page_offset = int(page_number) - 1
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         sql = '''
             SELECT  SQL_CALC_FOUND_ROWS
                     messages.id,
@@ -238,10 +257,11 @@ def get_messages(page_number=1):
 
 @blueprint.route('/get_archived_messages')
 @blueprint.route('/get_archived_messages/<path:page_number>')
-def get_archived_messages(page_number=1):
+@reconnect
+def get_archived_messages(page_number=1, conn=None):
     page_offset = int(page_number) - 1
 
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         sql = '''
             SELECT  SQL_CALC_FOUND_ROWS
                     messages.id,
@@ -314,21 +334,21 @@ def get_archived_messages(page_number=1):
     })
 
 
-@reconnect
 @blueprint.route('/get_relationships')
-def get_relationships():
+@reconnect
+def get_relationships(conn=None):
 
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         sql = '''SELECT * FROM relationships'''
         cursor.execute(sql)
         result = cursor.fetchall()
     return json.dumps(result)
 
 
-@reconnect
 @blueprint.route('/get_num_messages/<days>')
-def get_num_messages(days):
-    with connection.cursor() as cursor:
+@reconnect
+def get_num_messages(days, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             SELECT count(*) as num_messages FROM messages
             WHERE timestamp >= (now() - INTERVAL %s DAY)
@@ -339,10 +359,10 @@ def get_num_messages(days):
     return json.dumps(result)
 
 
-@reconnect
 @blueprint.route('/get_sentiment_count/<days>')
-def get_sentiment_count(days):
-    with connection.cursor() as cursor:
+@reconnect
+def get_sentiment_count(days, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             SELECT CONCAT(UCASE(LEFT(sentiment, 1)), LCASE(SUBSTRING(sentiment, 2))) as label, count(sentiment) as value,
             case
@@ -359,10 +379,10 @@ def get_sentiment_count(days):
     return json.dumps(result)
 
 
-@reconnect
 @blueprint.route('/archive_message/<id>', methods=['POST'])
-def archive_message(id):
-    with connection.cursor() as cursor:
+@reconnect
+def archive_message(id, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             UPDATE messages
             SET archived_timestamp = NOW()
@@ -370,7 +390,6 @@ def archive_message(id):
         '''
         cursor.execute(sql, [id])
 
-    connection.commit()
     socketio.emit('incoming data', get_messages())
     socketio.emit('archived data', get_archived_messages())
     return json.dumps({'status': 'success'})
