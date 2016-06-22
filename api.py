@@ -1,9 +1,14 @@
-import json
-import os
 import atexit
+import json
+import math
+import os
 import sys
+
 import pymysql.cursors
 from flask import Blueprint, request
+
+MESSAGES_PER_PAGE = 10
+
 
 blueprint = Blueprint("api", __name__)
 socketio = None
@@ -34,10 +39,10 @@ elif os.path.isfile('config.json'):
             db = mysql_cred['name']
         except:
             raise
-            sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials');
+            sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials')
 
 else:
-    sys.exit('Database credentials not specified');
+    sys.exit('Database credentials not specified')
 
 connection = pymysql.connect(host=hostname,
                              user=username,
@@ -45,6 +50,7 @@ connection = pymysql.connect(host=hostname,
                              db=db,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
+
 
 def _drop_tables(cursor):
     try:
@@ -73,13 +79,14 @@ def reconnect(func):
                                          cursorclass=pymysql.cursors.DictCursor)
             retval = func()
             return retval
-        # print "committed"
     return wrapper
+
 
 def close_db(con):
     con.close()
 
 atexit.register(close_db, con=connection)
+
 
 @reconnect
 def create_db():
@@ -104,13 +111,13 @@ def create_db():
                 sentiment VARCHAR(12)); '''
         cursor.execute(sql)
 
-create_db();
+create_db()
+
 
 @reconnect
 @blueprint.route('/message', methods=['POST'])
 def message():
     message_body = request.form['Body']
-    print message_body
     phone_number = request.form['From']
     city = request.form['FromCity']
     state = request.form['FromState']
@@ -153,7 +160,7 @@ def message():
     connection.commit()
 
     # Emit the data via websocket
-    socketio.emit('incoming data', get_messages());
+    socketio.emit('incoming data', get_messages())
 
     return json.dumps({'status': 'success'})
 
@@ -163,12 +170,14 @@ def _num_to_day(num):
     return days[num]
 
 
-# @reconnect
 @blueprint.route('/get_messages')
-def get_messages():
+@blueprint.route('/get_messages/<path:page_number>')
+def get_messages(page_number=1):
+    page_offset = int(page_number) - 1
     with connection.cursor() as cursor:
         sql = '''
-            SELECT  messages.id,
+            SELECT  SQL_CALC_FOUND_ROWS
+                    messages.id,
                     messages.text,
                     phone_number,
                     city,
@@ -191,11 +200,15 @@ def get_messages():
             WHERE messages.archived_timestamp is NULL
             GROUP BY messages.id
             ORDER BY timestamp desc
-            LIMIT 5
+            LIMIT %s
+            OFFSET %s
         '''
-        cursor.execute(sql)
+
+        cursor.execute(sql, [MESSAGES_PER_PAGE, page_offset * MESSAGES_PER_PAGE])
         result = cursor.fetchall()
 
+        cursor.execute('SELECT FOUND_ROWS() as pages')
+        pages = cursor.fetchone()
     for r in result:
         timestamp = r['timestamp']
         day_of_week = _num_to_day(timestamp.weekday())
@@ -217,14 +230,21 @@ def get_messages():
                 'sentiment': details[3]
             }
         r.pop('relationships')
-    return json.dumps(result)
+    return json.dumps({
+        'messages': result,
+        'totalPages': math.ceil(float(pages['pages']) / MESSAGES_PER_PAGE)
+    })
 
-# @reconnect
+
 @blueprint.route('/get_archived_messages')
-def get_archived_messages():
+@blueprint.route('/get_archived_messages/<path:page_number>')
+def get_archived_messages(page_number=1):
+    page_offset = int(page_number) - 1
+
     with connection.cursor() as cursor:
         sql = '''
-            SELECT  messages.id,
+            SELECT  SQL_CALC_FOUND_ROWS
+                    messages.id,
                     messages.text,
                     phone_number,
                     city,
@@ -248,10 +268,15 @@ def get_archived_messages():
             WHERE messages.archived_timestamp is NOT NULL
             GROUP BY messages.id
             ORDER BY timestamp desc
-            LIMIT 5
+            LIMIT %s
+            OFFSET %s
         '''
-        cursor.execute(sql)
+
+        cursor.execute(sql, [MESSAGES_PER_PAGE, page_offset * MESSAGES_PER_PAGE])
         result = cursor.fetchall()
+
+        cursor.execute('SELECT FOUND_ROWS() as pages')
+        pages = cursor.fetchone()
 
     for r in result:
         timestamp = r['timestamp']
@@ -282,7 +307,12 @@ def get_archived_messages():
                 'sentiment': details[3]
             }
         r.pop('relationships')
-    return json.dumps(result)
+
+    return json.dumps({
+        'messages': result,
+        'totalPages': math.ceil(float(pages['pages']) / MESSAGES_PER_PAGE)
+    })
+
 
 @reconnect
 @blueprint.route('/get_relationships')
@@ -308,6 +338,7 @@ def get_num_messages(days):
 
     return json.dumps(result)
 
+
 @reconnect
 @blueprint.route('/get_sentiment_count/<days>')
 def get_sentiment_count(days):
@@ -327,6 +358,7 @@ def get_sentiment_count(days):
 
     return json.dumps(result)
 
+
 @reconnect
 @blueprint.route('/archive_message/<id>', methods=['POST'])
 def archive_message(id):
@@ -338,7 +370,7 @@ def archive_message(id):
         '''
         cursor.execute(sql, [id])
 
-    connection.commit();
-    socketio.emit('incoming data', get_messages());
-    socketio.emit('archived data', get_archived_messages());
+    connection.commit()
+    socketio.emit('incoming data', get_messages())
+    socketio.emit('archived data', get_archived_messages())
     return json.dumps({'status': 'success'})
