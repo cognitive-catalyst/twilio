@@ -3,6 +3,7 @@ import json
 import math
 import os
 import sys
+import time
 from functools import wraps
 
 import pymysql.cursors
@@ -21,36 +22,33 @@ db = None
 
 if 'VCAP_SERVICES' in os.environ:
     mysql_info = json.loads(os.environ['VCAP_SERVICES'])['cleardb'][0]
-    mysql_cred = mysql_info['credentials']
-    hostname = mysql_cred['hostname']
-    port = mysql_cred['port'] or 3306
-    username = mysql_cred['username']
-    password = mysql_cred['password']
-    db = mysql_cred['name']
-
 elif os.path.isfile('config.json'):
     with open('config.json') as json_data:
         try:
             mysql_info = json.loads(json_data.read())
-            mysql_cred = mysql_info['credentials']
-            hostname = mysql_cred['hostname']
-            port = mysql_cred['port'] or 3306
-            username = mysql_cred['username']
-            password = mysql_cred['password']
-            db = mysql_cred['name']
         except:
             raise
             sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials')
-
 else:
     sys.exit('Database credentials not specified')
 
-connection = pymysql.connect(host=hostname,
-                             user=username,
-                             password=password,
-                             db=db,
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+mysql_cred = mysql_info['credentials']
+hostname = mysql_cred['hostname']
+port = mysql_cred['port'] or 3306
+username = mysql_cred['username']
+password = mysql_cred['password']
+db = mysql_cred['name']
+
+try:
+    connection = pymysql.connect(host=hostname,
+                                 user=username,
+                                 password=password,
+                                 db=db,
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    connection.close()
+except:
+    sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials')
 
 
 def _drop_tables(cursor):
@@ -74,12 +72,7 @@ def reconnect(func):
 
         if conn is None:
             close_conn = True
-            conn = pymysql.connect(host=hostname,
-                                   user=username,
-                                   password=password,
-                                   db=db,
-                                   charset='utf8mb4',
-                                   cursorclass=pymysql.cursors.DictCursor)
+            conn = connect()
 
             kwargs['conn'] = conn
         retval = func(*args, **kwargs)
@@ -88,24 +81,31 @@ def reconnect(func):
             conn.commit()
             conn.close()
         return retval
-        # try:
-        #     func()
-        # except pymysql.err.OperationalError:
-        #     connection = pymysql.connect(host=hostname,
-        #                                  user=username,
-        #                                  password=password,
-        #                                  db=db,
-        #                                  charset='utf8mb4',
-        #                                  cursorclass=pymysql.cursors.DictCursor)
-        #     retval = func()
-        #     return retval
+
     return wrapper
 
 
 def close_db(con):
     con.close()
 
-atexit.register(close_db, con=connection)
+
+def connect(a=0):
+    if a == 30:
+        return
+    try:
+        conn = pymysql.connect(host=hostname,
+                               user=username,
+                               password=password,
+                               db=db,
+                               charset='utf8mb4',
+                               cursorclass=pymysql.cursors.DictCursor)
+    except pymysql.err.InternalError:
+        time.sleep(1)
+        return connect(a=a + 1)
+    return conn
+
+
+# atexit.register(close_db, con=connection)
 
 
 @reconnect
