@@ -1,17 +1,54 @@
+import atexit
 import json
+import math
+import os
+import sys
+import time
+from functools import wraps
 
 import pymysql.cursors
 from flask import Blueprint, request
 
+MESSAGES_PER_PAGE = 10
+
+
 blueprint = Blueprint("api", __name__)
 socketio = None
+hostname = None
+port = None
+username = None
+password = None
+db = None
 
-connection = pymysql.connect(host='169.44.9.188',
-                             user='SQL_USER',
-                             password='12212xlk821',
-                             db='twilio',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+if 'VCAP_SERVICES' in os.environ:
+    mysql_info = json.loads(os.environ['VCAP_SERVICES'])['cleardb'][0]
+elif os.path.isfile('config.json'):
+    with open('config.json') as json_data:
+        try:
+            mysql_info = json.loads(json_data.read())
+        except:
+            raise
+            sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials')
+else:
+    sys.exit('Database credentials not specified')
+
+mysql_cred = mysql_info['credentials']
+hostname = mysql_cred['hostname']
+port = mysql_cred['port'] or 3306
+username = mysql_cred['username']
+password = mysql_cred['password']
+db = mysql_cred['name']
+
+try:
+    connection = pymysql.connect(host=hostname,
+                                 user=username,
+                                 password=password,
+                                 db=db,
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    connection.close()
+except:
+    sys.exit('Database credentials are incorrect. Please update the config.json with the database credentials')
 
 
 def _drop_tables(cursor):
@@ -28,41 +65,65 @@ def _drop_tables(cursor):
 
 
 def reconnect(func):
-    def wrapper():
-        global connection
-        try:
-            func()
-        except pymysql.err.OperationalError:
-            connection = pymysql.connect(host='169.44.9.188',
-                                         user='SQL_USER',
-                                         password='12212xlk821',
-                                         db='twilio',
-                                         charset='utf8mb4',
-                                         cursorclass=pymysql.cursors.DictCursor)
-            retval = func()
-            return retval
-        # print "committed"
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        close_conn = False
+        conn = kwargs.get('conn')
+
+        if conn is None:
+            close_conn = True
+            conn = connect()
+
+            kwargs['conn'] = conn
+        retval = func(*args, **kwargs)
+
+        if close_conn:
+            conn.commit()
+            conn.close()
+        return retval
+
     return wrapper
 
 
+def close_db(con):
+    con.close()
+
+
+def connect(a=0):
+    if a == 30:
+        return
+    try:
+        conn = pymysql.connect(host=hostname,
+                               user=username,
+                               password=password,
+                               db=db,
+                               charset='utf8mb4',
+                               cursorclass=pymysql.cursors.DictCursor)
+    except pymysql.err.InternalError:
+        time.sleep(1)
+        return connect(a=a + 1)
+    return conn
+
+
+# atexit.register(close_db, con=connection)
+
+
 @reconnect
-@blueprint.route('/create_db')
-def create_db():
-    with connection.cursor() as cursor:
-        _drop_tables(cursor)
-        sql = '''CREATE TABLE messages
+def create_db(conn=None):
+    with conn.cursor() as cursor:
+        sql = '''CREATE TABLE IF NOT EXISTS messages
                 (id INT AUTO_INCREMENT,
                 text VARCHAR(3000),
                 phone_number VARCHAR(15),
                 city VARCHAR(30),
                 state VARCHAR(2),
                 sentiment VARCHAR(15),
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                archived_timestamp DATETIME DEFAULT null,
+                timestamp DATETIME DEFAULT NULL,
+                archived_timestamp DATETIME DEFAULT NULL,
                 PRIMARY KEY (id)); '''
         cursor.execute(sql)
 
-        sql = '''CREATE TABLE relationships
+        sql = '''CREATE TABLE IF NOT EXISTS relationships
                 (message_id INT,
                 text VARCHAR(50),
                 type VARCHAR(25),
@@ -70,14 +131,13 @@ def create_db():
                 sentiment VARCHAR(12)); '''
         cursor.execute(sql)
 
-    return json.dumps({'status': 'success'})
+create_db()
 
 
-@reconnect
 @blueprint.route('/message', methods=['POST'])
-def message():
+@reconnect
+def message(conn=None):
     message_body = request.form['Body']
-    print message_body
     phone_number = request.form['From']
     city = request.form['FromCity']
     state = request.form['FromState']
@@ -90,11 +150,11 @@ def message():
 
     data = addOns['results']['ibm_watson_insights']['result']
 
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         parameters = [message_body, phone_number, city, state, sentiment]
         sql = '''INSERT INTO messages
-        (text, phone_number, city, state, sentiment)
-        VALUES(%s, %s, %s, %s, %s)'''
+        (text, phone_number, city, state, sentiment, timestamp)
+        VALUES(%s, %s, %s, %s, %s, NOW())'''
         cursor.execute(sql, parameters)
 
         parameters = []
@@ -117,10 +177,8 @@ def message():
         VALUES(LAST_INSERT_ID(), %s, %s, %s, %s)'''
         cursor.executemany(sql, parameters)
 
-    connection.commit()
-
     # Emit the data via websocket
-    socketio.emit('incoming data', get_messages());
+    socketio.emit('incoming data', get_messages())
 
     return json.dumps({'status': 'success'})
 
@@ -130,12 +188,15 @@ def _num_to_day(num):
     return days[num]
 
 
-# @reconnect
 @blueprint.route('/get_messages')
-def get_messages():
-    with connection.cursor() as cursor:
+@blueprint.route('/get_messages/<path:page_number>')
+@reconnect
+def get_messages(page_number=1, conn=None):
+    page_offset = int(page_number) - 1
+    with conn.cursor() as cursor:
         sql = '''
-            SELECT  messages.id,
+            SELECT  SQL_CALC_FOUND_ROWS
+                    messages.id,
                     messages.text,
                     phone_number,
                     city,
@@ -158,11 +219,15 @@ def get_messages():
             WHERE messages.archived_timestamp is NULL
             GROUP BY messages.id
             ORDER BY timestamp desc
-            LIMIT 5
+            LIMIT %s
+            OFFSET %s
         '''
-        cursor.execute(sql)
+
+        cursor.execute(sql, [MESSAGES_PER_PAGE, page_offset * MESSAGES_PER_PAGE])
         result = cursor.fetchall()
 
+        cursor.execute('SELECT FOUND_ROWS() as pages')
+        pages = cursor.fetchone()
     for r in result:
         timestamp = r['timestamp']
         day_of_week = _num_to_day(timestamp.weekday())
@@ -184,14 +249,22 @@ def get_messages():
                 'sentiment': details[3]
             }
         r.pop('relationships')
-    return json.dumps(result)
+    return json.dumps({
+        'messages': result,
+        'totalPages': math.ceil(float(pages['pages']) / MESSAGES_PER_PAGE)
+    })
 
-# @reconnect
+
 @blueprint.route('/get_archived_messages')
-def get_archived_messages():
-    with connection.cursor() as cursor:
+@blueprint.route('/get_archived_messages/<path:page_number>')
+@reconnect
+def get_archived_messages(page_number=1, conn=None):
+    page_offset = int(page_number) - 1
+
+    with conn.cursor() as cursor:
         sql = '''
-            SELECT  messages.id,
+            SELECT  SQL_CALC_FOUND_ROWS
+                    messages.id,
                     messages.text,
                     phone_number,
                     city,
@@ -215,10 +288,15 @@ def get_archived_messages():
             WHERE messages.archived_timestamp is NOT NULL
             GROUP BY messages.id
             ORDER BY timestamp desc
-            LIMIT 5
+            LIMIT %s
+            OFFSET %s
         '''
-        cursor.execute(sql)
+
+        cursor.execute(sql, [MESSAGES_PER_PAGE, page_offset * MESSAGES_PER_PAGE])
         result = cursor.fetchall()
+
+        cursor.execute('SELECT FOUND_ROWS() as pages')
+        pages = cursor.fetchone()
 
     for r in result:
         timestamp = r['timestamp']
@@ -249,23 +327,28 @@ def get_archived_messages():
                 'sentiment': details[3]
             }
         r.pop('relationships')
-    return json.dumps(result)
 
-@reconnect
+    return json.dumps({
+        'messages': result,
+        'totalPages': math.ceil(float(pages['pages']) / MESSAGES_PER_PAGE)
+    })
+
+
 @blueprint.route('/get_relationships')
-def get_relationships():
+@reconnect
+def get_relationships(conn=None):
 
-    with connection.cursor() as cursor:
+    with conn.cursor() as cursor:
         sql = '''SELECT * FROM relationships'''
         cursor.execute(sql)
         result = cursor.fetchall()
     return json.dumps(result)
 
 
-@reconnect
 @blueprint.route('/get_num_messages/<days>')
-def get_num_messages(days):
-    with connection.cursor() as cursor:
+@reconnect
+def get_num_messages(days, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             SELECT count(*) as num_messages FROM messages
             WHERE timestamp >= (now() - INTERVAL %s DAY)
@@ -275,10 +358,11 @@ def get_num_messages(days):
 
     return json.dumps(result)
 
-@reconnect
+
 @blueprint.route('/get_sentiment_count/<days>')
-def get_sentiment_count(days):
-    with connection.cursor() as cursor:
+@reconnect
+def get_sentiment_count(days, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             SELECT CONCAT(UCASE(LEFT(sentiment, 1)), LCASE(SUBSTRING(sentiment, 2))) as label, count(sentiment) as value,
             case
@@ -294,10 +378,11 @@ def get_sentiment_count(days):
 
     return json.dumps(result)
 
-@reconnect
+
 @blueprint.route('/archive_message/<id>', methods=['POST'])
-def archive_message(id):
-    with connection.cursor() as cursor:
+@reconnect
+def archive_message(id, conn=None):
+    with conn.cursor() as cursor:
         sql = '''
             UPDATE messages
             SET archived_timestamp = NOW()
@@ -305,7 +390,6 @@ def archive_message(id):
         '''
         cursor.execute(sql, [id])
 
-    connection.commit();
-    socketio.emit('incoming data', get_messages());
-    socketio.emit('archived data', get_archived_messages());
+    socketio.emit('incoming data', get_messages())
+    socketio.emit('archived data', get_archived_messages())
     return json.dumps({'status': 'success'})

@@ -1,0 +1,9 @@
+{
+    "credentials": {
+        "name": <dbname>,
+        "hostname": <hostname> ,
+        "port": "3306",
+        "username": <username> ,
+        "password": <password>
+    }
+}
