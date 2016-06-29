@@ -176,7 +176,7 @@ def message(conn=None):
         (message_id, text, type, relevance, sentiment)
         VALUES(LAST_INSERT_ID(), %s, %s, %s, %s)'''
         cursor.executemany(sql, parameters)
-
+    conn.commit()
     # Emit the data via websocket
     socketio.emit('incoming data', get_messages())
 
