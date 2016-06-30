@@ -1,6 +1,6 @@
 applications:
--       name: watson-twilio-demo-app
-        host: watson-twilio-demo-app
+-       name: twilio-signal
+        host: twilio-signal
         buildpack: python_buildpack
         memory: 256M
         instances: 1

@@ -1,9 +1,11 @@
 {
     "credentials": {
-        "name": <dbname>,
-        "hostname": <hostname> ,
-        "port": "3306",
-        "username": <username> ,
-        "password": <password>
+      "jdbcUrl": "jdbc:mysql://us-cdbr-iron-east-04.cleardb.net/ad_3b31bfa21a8aede?user=b5be49543549de&password=4d7e531c",
+      "uri": "mysql://b5be49543549de:4d7e531c@us-cdbr-iron-east-04.cleardb.net:3306/ad_3b31bfa21a8aede?reconnect=true",
+      "name": "ad_3b31bfa21a8aede",
+      "hostname": "us-cdbr-iron-east-04.cleardb.net",
+      "port": "3306",
+      "username": "b5be49543549de",
+      "password": "4d7e531c"
     }
 }

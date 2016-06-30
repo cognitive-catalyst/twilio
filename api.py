@@ -137,8 +137,10 @@ create_db()
 @blueprint.route('/message', methods=['POST'])
 @reconnect
 def message(conn=None):
-    message_body = request.form['Body']
     phone_number = request.form['From']
+    phone_number = phone_number[:-3] + "XXXX"  # obfuscate phone number
+
+    message_body = request.form['Body']
     city = request.form['FromCity']
     state = request.form['FromState']
 
@@ -389,7 +391,7 @@ def archive_message(id, conn=None):
             WHERE id = %s
         '''
         cursor.execute(sql, [id])
-
+    conn.commit()
     socketio.emit('incoming data', get_messages())
     socketio.emit('archived data', get_archived_messages())
     return json.dumps({'status': 'success'})

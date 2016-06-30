@@ -2,7 +2,9 @@
  *  Format phone numbers
 */
 module.exports = (phonenum) => {
-    var regexObj = /^(?:\+?1[-. ]?)?(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([0-9]{4})$/;
+    // var regexObj = /^(?:\+?1[-. ]?)?(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([0-9]{4})$/;
+    var regexObj = /^(?:\+?1[-. ]?)?(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([\S]{4})$/;
+
     if (regexObj.test(phonenum)) {
         var parts = phonenum.match(regexObj);
         var phone = "";
