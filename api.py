@@ -285,7 +285,7 @@ def get_archived_messages(page_number=1, conn=None):
                         separator "|"
                     ) as relationships
             FROM messages
-            JOIN relationships
+            LEFT JOIN relationships
             ON messages.id=relationships.message_id
             WHERE messages.archived_timestamp is NOT NULL
             GROUP BY messages.id
