@@ -1,79 +1,68 @@
-.message{
-    border-width:1px 0 0 0 ;
-    border-style:solid;
-    border-color:#AFAEAF;
-    display:flex;
-    justify-content:space-between;
+.message {
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: #AFAEAF;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding:10px 0;
-
-    .check{
-        width:40px;
-        margin-left:40px;
-        cursor:pointer;
-        &:hover{
-            opacity:0.5;
+    padding: 10px 0;
+    min-height: 80px;
+    .check {
+        width: 40px;
+        margin-left: 40px;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.5;
         }
-
     }
-
-    &:last-child{
-        border-bottom-width:1px;
-
+    &:last-child {
+        border-bottom-width: 1px;
     }
-
-    .message-header{
-        display:flex;
-        margin-bottom:10px;
-        .info{
-            margin-right:15px;
-            color:#AFAEAF;
-
+    .message-header {
+        display: flex;
+        margin-bottom: 10px;
+        .info {
+            margin-right: 15px;
+            color: #AFAEAF;
         }
-
-        .phone-number{
+        .phone-number {
             color: #00B39F;
         }
-
-        .location{
-            text-transform:capitalize;
+        .location {
+            text-transform: capitalize;
         }
     }
-    .message-left{
-        flex:2;
-        margin-right:40px;
-
-        .keyword{
-            background-color:rgba(#00B39F, 0.3);
-
-            &.bold{
-                font-weight:bold;
+    .message-left {
+        flex: 2;
+        margin-right: 40px;
+        .keyword {
+            background-color: rgba(#00B39F, 0.3);
+            &.bold {
+                font-weight: bold;
             }
         }
     }
-
-    .message-right{
-        flex:1;
-        display:flex;
-        flex-direction:column;
+    .message-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
-
-    .message-info{
-        display:flex;
-        flex-direction:row;
-        .key{
-            width:50px;
-            color:#AFAEAF;
-            margin-right:5px;
-            display:flex;
-            justify-content:flex-end;
+    .message-info {
+        display: flex;
+        flex-direction: row;
+        .key {
+            width: 50px;
+            color: #AFAEAF;
+            margin-right: 5px;
+            display: flex;
+            justify-content: flex-end;
         }
-        &.sentiment .value{
-            text-transform:capitalize;
+        &.sentiment .value {
+            text-transform: capitalize;
         }
-        &.negative .value{
-            font-weight:600;
-            color:#734199;
+        &.negative .value {
+            font-weight: 600;
+            color: #734199;
         }
     }
 }

@@ -138,7 +138,7 @@ create_db()
 @reconnect
 def message(conn=None):
     phone_number = request.form['From']
-    phone_number = phone_number[:-3] + "XXXX"  # obfuscate phone number
+    phone_number = phone_number[:-4] + "XXXX"  # obfuscate phone number
 
     message_body = request.form['Body']
     city = request.form['FromCity']
