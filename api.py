@@ -181,7 +181,6 @@ def message(conn=None):
     conn.commit()
     # Emit the data via websocket
     socketio.emit('incoming data', get_messages())
-
     return json.dumps({'status': 'success'})
 
 
@@ -216,7 +215,7 @@ def get_messages(page_number=1, conn=None):
                         separator "|"
                     ) as relationships
             FROM messages
-            JOIN relationships
+            LEFT JOIN relationships
             ON messages.id=relationships.message_id
             WHERE messages.archived_timestamp is NULL
             GROUP BY messages.id
@@ -245,11 +244,12 @@ def get_messages(page_number=1, conn=None):
         r['concept'] = {}
         for rel in relationships:
             details = rel.split(':')
-            r_type = details[0]
-            r[r_type][details[1]] = {
-                'relevance': details[2],
-                'sentiment': details[3]
-            }
+            if len(details) > 2:
+                r_type = details[0]
+                r[r_type][details[1]] = {
+                    'relevance': details[2],
+                    'sentiment': details[3]
+                }
         r.pop('relationships')
     return json.dumps({
         'messages': result,
