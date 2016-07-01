@@ -135,7 +135,11 @@ Now, go to `localhost:PORT` in your browser (for example, PORT is 8888 in the ex
 
 ## Configure Twilio
 
-TODO
+1. [Create a Twilio Account](https://www.twilio.com/try-twilio)
+2. Navigate to the [Programmable SMS services page](https://www.twilio.com/console/sms/services) and click on "Create new Messaging Service"
+3. From the configure pane, put "http://\<your-app-name\>.mybluemix.net/api/message" as the Request Url ![IMG NOT FOUND](readme-assets/url-config.png)
+4. Navigate to the numbers pane and Buy a Number
+5. Add the IBM Watson Message Insights and the IBM Watson Message Sentiment Add-ons from the [Add-ons page](https://www.twilio.com/console/sms/add-ons)
 
 ## Contribute
 We are happy to accept external contributions to this project, either in the form of issues or pull requests.
