@@ -40,52 +40,54 @@ You can deploy your own instance of the demo app to Bluemix.
   npm run build
   ```
 
-7. Edit the `manifest.yml` file and change the `<name>` and `<host>` to something unique.
+7. Edit the `manifest.yml` file and change the `<uname>` and `<uname>` to something unique.
 
   ```
   applications:
-  - name: watson-twilio-demo-app
-     host: watson-twilio-demo-app
+  -  name: <uname>
+     host: <uname>
      buildpack: python_buildpack
      path: .
      domain: mybluemix.net
      instances: 1
      memory: 256M
   ```
-  The host you use will determinate your application URL initially, for example, `<host>.mybluemix.net`.
+  The host you use will determinate your application URL initially, for example, `<uname>.mybluemix.net`.
 
 8. Connect to Bluemix in the command line tool and follow the prompts to log in:
 
   ```
-  $ cf api https://api.ng.bluemix.net
-  $ cf login
+  cf api https://api.ng.bluemix.net
+  cf login
   ```
 
 9. First we need to create a MySQL Database instance. We will be using the ClearDB Spark Plan which is free and can hold up to 5 MB of data with 4 simultaneous connections. **Note**: You might need to target a space by selecting a space or by using the `cf target -s SPACE` command.
 
   ```
-  $ cf create-service cleardb spark mysql-twilio-instance
+  cf create-service cleardb spark mysql-twilio-instance
   ```
 
 10. Push the demo app to Bluemix. You need to perform additional steps when it is deployed, so you must add the option --no-start argument.
 
   ```
-  $ cf push --no-start
+  cf push --no-start
   ```
 
-11. Now, bind the service to your app. **Note**: The name *watson-twilio-demo-app* must be updated to reflect the name that you chose in step 5.
+11. Now, bind the service to your app. **Note**: The name <uname> must be updated to reflect the name that you chose in step 5.
 
   ```
-  $ cf bind-service watson-twilio-demo-app mysql-twilio-instance
+  cf bind-service <uname> mysql-twilio-instance
   ```
 
-12. Finally, start your app. You can also do this from the Bluemix dashboard. **Note**: The name *watson-twilio-demo-app* must be updated to reflect the name that you chose in step 5.
+12. Finally, start your app. You can also do this from the Bluemix dashboard. **Note**: The name <uname> must be updated to reflect the name that you chose in step 5.
 
   ```
-  $ cf start watson-twilio-demo-app
+  cf start <uname>
   ```
 
-Congratulations! You now have your very own instance of the Insights for Weather demo app running on Bluemix. Try it out at `https://<host>.mybluemix.net`, where <host> is the value that you set in your `manifest.yml` file.
+Congratulations! You now have your very own instance of the Twilio demo app running on Bluemix.
+After you connect it to your Twilio service, you can 
+try it out at `https://<uname>.mybluemix.net`, where <uname> is the value that you set in your `manifest.yml` file.
 
 ## Run the app locally
 
@@ -141,6 +143,14 @@ Now, go to `localhost:PORT` in your browser (for example, PORT is 8888 in the ex
 4. Navigate to the numbers pane and Buy a Number
 5. Add the IBM Watson Message Insights and the IBM Watson Message Sentiment Add-ons from the [Add-ons page](https://www.twilio.com/console/sms/add-ons)
 
+## Use the Application
+
+Now, using the number you set up in your Twilio Configuration, you can send an SMS to that number, and it will appear
+on the <uname>.mybluemix.net website with the keywords and entities highlighted, and sentiment with possible
+related concepts displayed on the right.  Here is an example:
+![IMG NOT FOUND](readme-assets/demo.png)
+
+
 ## Contribute
 We are happy to accept external contributions to this project, either in the form of issues or pull requests.
 If you find a bug, please report it using the [Issues section](https://github.ibm.com/amblock/twilio/issues) or even better, fork the project and submit a pull request with your fix!
@@ -151,7 +161,7 @@ Pull requests will be evaluated on an individual basis based on value added to t
 The primary source of debugging information for your Bluemix app is the logs. To see them, run the following command using the Cloud Foundry CLI:
 
   ```
-  $ cf logs <application-name> --recent
+  cf logs <application-name> --recent
   ```
 For more detailed information on troubleshooting your application, see the [Troubleshooting section](https://www.ng.bluemix.net/docs/troubleshoot/tr.html) in the Bluemix documentation.
 
