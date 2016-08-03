@@ -96,7 +96,7 @@ try it out at `https://<uname>.mybluemix.net`, where <uname> is the value that y
 2. Clone the app to your local environment from your terminal using the following command:
 
   ```
-  git clone https://github.ibm.com/amblock/twilio.git
+  git clone https://github.com/cognitive-catalyst/twilio.git
   ```
 
 3. `cd` into this newly created directory.
