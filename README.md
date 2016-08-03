@@ -23,7 +23,7 @@ You can deploy your own instance of the demo app to Bluemix.
 3. Clone the app to your local environment from your terminal using the following command:
 
   ```
-  git clone https://github.ibm.com/amblock/twilio.git
+  git clone https://github.com/cognitive-catalyst/twilio.git
   ```
 
 4. `cd` into this newly created directory.
