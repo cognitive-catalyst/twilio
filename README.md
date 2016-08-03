@@ -146,8 +146,8 @@ Now, go to `localhost:PORT` in your browser (for example, PORT is 8888 in the ex
 ## Use the Application
 
 Now, using the number you set up in your Twilio Configuration, you can send an SMS to that number, and it will appear
-on the <uname>.mybluemix.net website with the keywords and entities highlighted, and sentiment with possible
-related concepts displayed on the right.  Here is an example:
+on the `<uname>.mybluemix.net` website with the keywords and entities highlighted, sentiment with possible
+related concepts displayed on the right, and an aggregate sentiment score of the past months messages on the left.  Here is an example:
 ![IMG NOT FOUND](readme-assets/demo.png)
 
 
