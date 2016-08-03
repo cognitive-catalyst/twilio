@@ -73,13 +73,13 @@ You can deploy your own instance of the demo app to Bluemix.
   cf push --no-start
   ```
 
-11. Now, bind the service to your app. **Note**: The name <uname> must be updated to reflect the name that you chose in step 5.
+11. Now, bind the service to your app. **Note**: The name `<uname>` must be updated to reflect the name that you chose in step 5.
 
   ```
   cf bind-service <uname> mysql-twilio-instance
   ```
 
-12. Finally, start your app. You can also do this from the Bluemix dashboard. **Note**: The name <uname> must be updated to reflect the name that you chose in step 5.
+12. Finally, start your app. You can also do this from the Bluemix dashboard. **Note**: The name `<uname>` must be updated to reflect the name that you chose in step 5.
 
   ```
   cf start <uname>
@@ -87,7 +87,7 @@ You can deploy your own instance of the demo app to Bluemix.
 
 Congratulations! You now have your very own instance of the Twilio demo app running on Bluemix.
 After you connect it to your Twilio service, you can 
-try it out at `https://<uname>.mybluemix.net`, where <uname> is the value that you set in your `manifest.yml` file.
+try it out at `https://<uname>.mybluemix.net`, where `<uname>` is the host value that you set in your `manifest.yml` file.
 
 ## Run the app locally
 
