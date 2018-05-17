@@ -67,7 +67,7 @@ You can deploy your own instance of the demo app to Bluemix.
   cf create-service cleardb spark mysql-twilio-instance
   ```
 
-10. Push the demo app to Bluemix. You need to perform additional steps when it is deployed, so you must add the option --no-start argument.
+10. Push the demo app to Bluemix. You need to perform additional steps when it is deployed, so you must add the option `--no-start` argument.
 
   ```
   cf push --no-start
@@ -91,7 +91,7 @@ try it out at `https://<uname>.mybluemix.net`, where `<uname>` is the host value
 
 ## Run the app locally
 
-1. If don't have node.js already, [download node.js][download_node_url] and install it on your local machine.
+1. If don't have `node.js` already, [download node.js][download_node_url] and install it on your local machine.
 
 2. Clone the app to your local environment from your terminal using the following command:
 
@@ -133,13 +133,13 @@ try it out at `https://<uname>.mybluemix.net`, where `<uname>` is the host value
   python server.py
   ```
 
-Now, go to `localhost:PORT` in your browser (for example, PORT is 8888 in the example above).
+Now, go to `localhost:PORT` in your browser (for example, `PORT` is `8888` in the example above).
 
 ## Configure Twilio
 
 1. [Create a Twilio Account](https://www.twilio.com/try-twilio)
-2. Navigate to the [Programmable SMS services page](https://www.twilio.com/console/sms/services) and click on "Create new Messaging Service"
-3. From the configure pane, put "http://\<your-app-name\>.mybluemix.net/api/message" as the Request Url ![IMG NOT FOUND](readme-assets/url-config.png)
+2. Navigate to the [Programmable SMS services page](https://www.twilio.com/console/sms/services) and click on `Create new Messaging Service`
+3. From the configure pane, put `http://\<your-app-name\>.mybluemix.net/api/message` as the Request Url ![IMG NOT FOUND](readme-assets/url-config.png)
 4. Navigate to the numbers pane and Buy a Number
 5. Add the IBM Watson Message Insights and the IBM Watson Message Sentiment Add-ons from the [Add-ons page](https://www.twilio.com/console/sms/add-ons)
 
